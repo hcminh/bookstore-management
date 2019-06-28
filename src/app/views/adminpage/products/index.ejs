@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from coderthemes.com/adminto/vertical_dark/tables-datatable.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 21 Mar 2019 13:19:06 GMT -->
+
+<head>
+  <% include ../partials/head %>
+</head>
+
+
+<body class="fixed-left">
+  <!-- <% if(typeof error != 'undefined') { %>
+        <div class="alert alert-danger alert-dismissible fade show alert-errorProduct" role="alert">
+          <strong>Error!</strong> <%- error %>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <% } %> -->
+  <!-- Begin page -->
+  <div id="wrapper">
+
+    <!-- Top Bar Start -->
+    <% include ../partials/navbar %>
+    <!-- Top Bar End -->
+
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <% include ../partials/side-bar %>
+    <!-- Left Sidebar End -->
+
+
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+      <!-- Start content -->
+      <div class="content">
+        <div class="container-fluid">
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card-box table-responsive">
+                <h4 class="m-t-0 header-title">Manage Products</h4>
+
+                <!-- Add product button -->
+                <button class="btn btn-primary waves-effect waves-light" data-toggle="modal"
+                  data-target="#modal-create">New Product</button>
+                <p class="text-muted font-14 m-b-30"></p>
+
+                <% include ./table %>
+              </div>
+            </div>
+          </div>
+          <!-- end row -->
+
+        </div> <!-- container -->
+
+      </div> <!-- content -->
+
+      <% include ../partials/footer %>
+
+    </div>
+
+
+    <!-- ============================================================== -->
+    <!-- End Right content here -->
+    <!-- ============================================================== -->
+
+
+    <!-- Right Sidebar -->
+    <% include ../partials/right-bar %>
+    <!-- /Right-bar -->
+
+  </div>
+  <!-- END wrapper -->
+
+  <!-- Create Modal-->
+  <% include ./modal-create %>
+  <!-- Edit Modal-->
+  <% include ./modal-edit %>
+  <!-- View Modal-->
+  <% include ./modal-view %>
+  <!-- Delete Modal-->
+  <% include ./modal-delete %>
+  <!-- Logout Modal-->
+  <% include ../partials/modal-logout %>
+  <!-- Scripts-->
+  <% include ../partials/scripts %>
+  <script>
+    var selectedId = '';
+  </script>
+  <script>
+    function getID(id) {
+      selectedId = id;
+    }
+    let table_body = $("#table-body");
+    function createComponentProduct(val) {
+      return `<tr id="tr-${val._id}">
+          <td> ${val.name} </td>
+          <td> ${val.productId}</td>
+          <td>$${val.prices}</td>
+          <td> ${val.solds}</td>
+          <td> ${val.category}</td>
+          <td class="text-center">
+            <button class="btn btn-outline-success"  data-toggle="modal" data-target="#view-modal" onclick="getProductInfo('${val._id}')" >view</button>
+            <button class="btn btn-outline-warning"  data-toggle="modal" data-target="#edit-modal" onclick="editProductInfo('${val._id}')" >edit</button>
+            <button class="btn btn-outline-danger" data-toggle="modal" data-target="#delete-modal" onclick="getID('${val._id}')">delete</button>
+          </td>
+        </tr>`;
+    }
+
+    function createComponentError(error) {
+      return `<div class="alert alert-danger alert-dismissible fade show alert-errorProduct" role="alert">
+          <strong>Error!</strong> ${error.responseJSON.message}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          </div>`
+    }
+
+
+    let nameInput = $('input[name="name"]');
+    let productIdInput = $('input[name="productId"]');
+    let amountInput = $('input[name="amount"]');
+    let pricesInput = $('input[name="prices"]');
+    let categoryInput = $('input[name="category"]');
+    let descriptionInput = $('textarea[name="description"]');
+
+    function emptyInput() {
+      nameInput.val('');
+      productIdInput.val('');
+      amountInput.val('');
+      pricesInput.val('');
+      categoryInput.val('');
+      descriptionInput.val('');
+      $(".dropify-clear").click();
+      
+    }
+
+    function cancelInput(event){
+      event.preventDefault();
+      emptyInput();
+    }
+
+  //create product
+    $('#form-create').on('submit', (function (e) {
+      e.preventDefault();
+      let formData = new FormData(this);
+      $.ajax({
+        method: 'POST',
+        url: `/admin/products/api`,
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function (data) {
+          location.reload();
+        },
+        error: function (err) {
+          $('body').append(createComponentError(err))
+        }
+      })
+    }));
+    //
+  //edit product
+    $('#form-edit').on('submit', (function (e) {
+      e.preventDefault();
+      let formData = new FormData(this);
+      $.ajax({
+        method: 'POST',
+        url: `/admin/products/api/${selectedId}`,
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function (data) {
+          location.reload();
+        },
+        error: function (err) {
+          $('body').append(createComponentError(err))
+        }
+      })
+    }));
+    //
+    function deleteProduct() {
+      $.ajax({
+        method: 'DELETE',
+        url: `/admin/products/api/${selectedId}`,
+        success: function (idDeleted) {
+          alert("Delete product success");
+          location.reload();
+        },
+        error: function (err) {
+          $('body').append(createComponentError(err))
+        }
+      })
+    }
+
+    let nameLabel = $('#label-name');
+    let productIdLabel = $('#label-productId');
+    let amountLabel = $('#label-amount');
+    let pricesLabel = $('#label-prices');
+    let categoryLabel = $('#label-category');
+    let descriptionLabel = $('#label-description');
+    let imagesLabel = $('#label-image');
+
+    function addDataToViewModal(product) {
+      nameLabel.text(product.name)
+      productIdLabel.text(product.productId)
+      amountLabel.text(product.amount)
+      pricesLabel.text(product.prices)
+      categoryLabel.text(product.category)
+      descriptionLabel.empty();
+      descriptionLabel.append(product.description);
+      for(item of product.imageLink){
+      imagesLabel.append(`<div class="col-lg-3">
+                          <img class="w-100" src="${item}">
+                        </div>`)
+      }
+    }
+
+    let nameEdit = $('#edit-name');
+    let productIdEdit = $('#edit-productId');
+    let amountEdit = $('#edit-amount');
+    let pricesEdit = $('#edit-prices');
+    let categoryEdit = $('#edit-category');
+    let descriptionEdit = $('#edit-description');
+    // let imagesLabel = $('#edit-image');
+    function addDataToEditModal(product) {
+      nameEdit.val(product.name)
+      productIdEdit.val(product.productId)
+      amountEdit.val(product.amount)
+      pricesEdit.val(product.prices)
+      categoryEdit.val(product.category)
+      descriptionEdit.empty();
+      descriptionEdit.val(product.description);
+      // for(item of product.imageLink){
+      // imagesLabel.append(`<div class="col-lg-3">
+      //                     <img class="w-100" src="${item}">
+      //                   </div>`)
+      // }
+    }
+
+    function getProductInfo(id) {
+      $.getJSON(`/admin/products/api/${id}`, function (data) {
+        addDataToViewModal(data);
+      });
+    }
+    function editProductInfo(id) {
+      getID(id);
+      $.getJSON(`/admin/products/api/${id}`, function (data) {
+        addDataToEditModal(data);
+      });
+    }
+
+    $.getJSON("/admin/products/api", function (data) {
+      $.each(data, function (key, val) {
+        table_body.prepend(createComponentProduct(val));
+      });
+    });
+  </script>
+
+  <script src="/adminpage/assets/js/dropify.js"></script>
+  <script>
+
+
+    $('.dropify').dropify({
+      messages: {
+        'default': 'Drag and drop a file here or click',
+        'replace': 'Drag and drop or click to replace',
+        'remove': 'Remove',
+        'error': 'Ooops, something wrong appended.'
+      },
+      error: {
+        'fileSize': 'The file size is too big (2M max).'
+      }
+    });
+
+
+
+  </script>
+</body>
+
+<!-- Mirrored from coderthemes.com/adminto/vertical_dark/tables-datatable.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 21 Mar 2019 13:19:10 GMT -->
+
+</html>
