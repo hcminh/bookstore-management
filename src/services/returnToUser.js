@@ -28,6 +28,11 @@ module.exports = {
       message: `${err.message}`
     })
   },
+  successNotify: (res, sucs) => {
+    return res.status(200).json({
+      message: `${sucs.message}`
+    })
+  },
   success: (res, mess, data, option = {}) => {
     return res.json({
       success: true,

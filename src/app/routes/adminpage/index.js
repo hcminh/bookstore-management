@@ -4,9 +4,8 @@ router.get('/', (req, res, next) => {
     return res.render('adminpage');
 })
 
-router.use('/bills', require('./bills'));
-router.use('/users', require('./users'));
+router.use('/bill', require('./bill'));
+router.use('/user', require('./user'));
 router.use('/customer', require('./customer'));
 router.use('/book', require('./book'));
-router.use('/customerType', require('./customerType'));
 module.exports = router;

@@ -1,6 +1,6 @@
 
 const router = require('express').Router();
-const controller = require('controllers').bookController;
+const controller = require('app/controllers').bookController;
 
 const { IS_ADMIN, IS_EMPLOYEE } = require("config/constants");
 const { checkPermission } = require("services/checkPermission");
