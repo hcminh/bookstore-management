@@ -19,6 +19,9 @@ var book = new mongoose.Schema({
   price: {
     type: Number,
     required: true
+  },
+  description: {
+    type: String
   }
 });
 

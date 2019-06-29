@@ -1,0 +1,239 @@
+<script>
+    var selectedId = '';
+</script>
+<script>
+    function getID(id) {
+        selectedId = id;
+    }
+</script>
+<script>
+
+    /*
+    Khai báo biến
+    */
+    let nameInput = $('input[name="name"]');
+    let bookIDInput = $('input[name="bookID"]');
+    let categoryInput = $('input[name="category"]');
+    let authorInput = $('input[name="author"]');
+    let priceInput = $('input[name="price"]');
+    let descriptionInput = $('textarea[name="description"]');
+
+    let nameEdit = $('#edit-name');
+    let bookIDEdit = $('#edit-bookID');
+    let categoryEdit = $('#edit-category');
+    let authorEdit = $('#edit-author');
+    let priceEdit = $('#edit-price');
+    let descriptionEdit = $('#edit-description');
+
+    let nameLabel = $('#label-name');
+    let bookIDLabel = $('#label-bookID');
+    let categoryLabel = $('#label-category');
+    let authorLabel = $('#label-author');
+    let priceLabel = $('#label-price');
+    let descriptionLabel = $('#label-description');
+
+
+    /*
+    Code kiểm tra thông tin
+    */
+    function CheckValidate(listInput) {
+        listInput.forEach(element => {
+            element.css("border-color", "#E3E3E3");
+        });
+        for (let element of listInput) {
+            if (element.val() == "") {
+                element.focus();
+                element.css("border-color", "red")
+                return { err: true, message: element.attr('data-focus') };
+            }
+        }
+        return { err: false };
+    }
+
+    function valideToCreate() {
+        let array = [nameInput, bookIDInput, categoryInput, authorInput, priceInput, descriptionInput]
+        return (CheckValidate(array));
+    }
+
+    function valideToEdit() {
+        let array = [categoryEdit, authorEdit, priceEdit, descriptionEdit]
+        return (CheckValidate(array));
+    }
+
+    /*
+        Component
+    */
+    function componentError(error) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-error-content">
+                        <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                        </div>
+                        <div class="modal-body py-0">
+                            <p>${ error.responseJSON.message}</p>
+                        </div>
+                        <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="removeComponent()">Đóng</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>`
+    }
+    function componentSuccess(success) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-success-content">
+                            <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                            </div>
+                            <div class="modal-body py-0">
+                                <p>${ success.message}</p>
+                            </div>
+                            <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="reLoadPage()">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+    }
+    function removeComponent() {
+        $('#notify-wrapper').children().remove();
+    }
+
+    /*
+        Thêm sách mới
+    */
+    $('#form-create').on('submit', (function (e) {
+        e.preventDefault();
+        let validate = valideToCreate();
+        if (validate.err) {
+            alert("Yêu cầu nhập " + validate.message);
+            return false;
+        }
+        $.ajax({
+            method: 'POST',
+            url: `/admin/book/create`,
+            dataType: "json",
+            data: {
+                name: nameInput.val(),
+                bookID: bookIDInput.val(),
+                category: categoryInput.val(),
+                author: authorInput.val(),
+                price: priceInput.val(),
+                description: descriptionInput.val()
+            },
+            success: function (success) {
+                $('#modal-create').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#modal-create').modal('toggle')
+                $('#notify-wrapper').append(componentError(err))
+            }
+        })
+    }));
+
+    /*
+       Sửa sách
+   */
+    $('#form-edit').on('submit', (function (e) {
+        e.preventDefault();
+        let validate = valideToEdit();
+        if (validate.err) {
+            alert("Yêu cầu nhập " + validate.message);
+            return false;
+        }
+        $.ajax({
+            method: 'POST',
+            url: `/admin/book/info/${selectedId}`,
+            dataType: "json",
+            data: {
+                category: categoryEdit.val(),
+                author: authorEdit.val(),
+                price: priceEdit.val(),
+                description: descriptionEdit.val()
+            },
+            success: function (success) {
+                $('#edit-modal').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#edit-modal').modal('toggle')
+                $('#notify-wrapper').append(createComponentError(err))
+            }
+        })
+    }));
+
+    /*
+    Xóa sách
+    */
+    function deleteBook() {
+        $.ajax({
+            method: 'DELETE',
+            url: `/admin/book/info/${selectedId}`,
+            success: function (success) {
+                $('#delete-modal').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#delete-modal').modal('toggle')
+                $('#notify-wrapper').append(createComponentError(err))
+            }
+        })
+    }
+
+
+    /*
+    Cập nhật thông tin khác
+    */
+    function reLoadPage() {
+        location.reload();
+    }
+
+    function emptyInput() {
+        nameInput.val('');
+        bookIDInput.val('');
+        categoryInput.val('');
+        authorInput.val('');
+        priceInput.val('');
+        descriptionInput.val('');
+    }
+
+    function cancelInput(event) {
+        event.preventDefault();
+        emptyInput();
+    }
+
+    function addDataToViewModal(book) {
+        nameLabel.text(book.name)
+        bookIDLabel.text(book.bookID)
+        categoryLabel.text(book.category)
+        authorLabel.text(book.author)
+        priceLabel.text(book.price)
+        descriptionLabel.append(book.description);
+    }
+
+    function addDataToEditModal(book) {
+        nameEdit.val(book.name)
+        bookIDEdit.val(book.bookID)
+        categoryEdit.val(book.category)
+        authorEdit.val(book.author)
+        priceEdit.val(book.price)
+        descriptionEdit.val(book.description);
+    }
+
+    function getBookInfo(id) {
+        getID(id)
+        $.getJSON(`/admin/book/info/${id}`, function (data) {
+            addDataToViewModal(data);
+            addDataToEditModal(data);
+        });
+    }
+
+    // accept only positve number in input
+    function acceptPositiveNumber(event) {
+        return (event.charCode >= 48 && event.charCode <= 57) ? true : event.preventDefault();
+    }
+
+</script>

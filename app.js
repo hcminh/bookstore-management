@@ -34,7 +34,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session()); //persistent login sessions
 
-require('config/passport')(passport);
 
 if (process.env.IS_DEV != 'DEV' || process.env.IS_DEV == 'undefined') {
   app.disable('/setup');
@@ -43,12 +42,14 @@ else {
   app.use('/setup', require('app/routes/setup'));
 }
 
-app.use('/', require('app/routes'));
+
+require('config/passport')(passport);
+require('app/routes')(app);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  // next(createError(404));
-  res.render('error')
+  next(createError(404));
+  // res.render('error')
 });
 
 // error handler
@@ -59,7 +60,9 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  
+  console.log(err)
+  res.render('error', {error: err});
 });
 
 

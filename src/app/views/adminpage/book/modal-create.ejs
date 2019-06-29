@@ -1,0 +1,85 @@
+<!--  Modal content for the above example -->
+<div class="modal fade bs-example-modal-lg" tabindex="-1" id="modal-create" role="dialog" aria-labelledby="create-form"
+  aria-hidden="true" style="display: none;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header b-0">
+        <h4 class="modal-title mt-0" id="create-form">Thêm tựa sách mới vào kho hàng</h4>
+        <button type="button" onclick="cancelInput(event)" class="close" data-dismiss="modal"
+          aria-hidden="true">×</button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="card o-hidden border-0 shadow-lg my-0 py-4">
+          <!-- Nested Row within Card Body -->
+          <form class="user" id="form-create" method="POST" action="/admin/book/create">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="pb-3 px-5">
+
+                  <div class="form-group row">
+                    <div class="col-sm-6">
+                      <label for="">Tên sách</label>
+                      <input type="text" name="name" class="form-control form-control-user"
+                       data-focus="Tên sách" 
+                        placeholder="vd: Sách Ngữ Văn 9">
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="">Mã sách</label>
+                      <input type="text" name="bookID" class="form-control form-control-user" 
+                       data-focus="Mã sách" 
+                      placeholder="vd: DME001">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-6">
+                      <label for="">Thể loại</label>
+                      <input type="text" name="category" class="form-control form-control-user"
+                       data-focus="Thể loại" 
+                        placeholder="vd: Sách văn học">
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="">Tác giả</label>
+                      <input type="text" name="author" class="form-control form-control-user"
+                       data-focus="Tác giả" 
+                        placeholder="vd: Hoàng Công Minh">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <label for="">Đơn giá</label>
+                      <input type="text" name="price" class="form-control form-control-user"
+                      onkeypress="acceptPositiveNumber(event)"
+                       data-focus="Đơn giá" 
+                       placeholder="200000">
+                    </div>
+                  </div>
+                  <div class="form-group"> <label for="">Mô tả chi tiết sách</label>
+                    <textarea type="text" name="description" class="form-control form-control-user"
+                     data-focus="Mô tả chi tiết sách" 
+                      placeholder="Mô tả"></textarea>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-8"></div>
+                    <div class="col-sm-2">
+                      <button type="reset" class="btn btn-light btn-user btn-block">
+                        Nhập lại
+                      </button>
+                    </div>
+                    <div class="col-sm-2">
+                      <button type="submit" class="btn btn-primary btn-user btn-block">
+                        Lưu
+                      </button>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </form>
+          <!-- end row -->
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

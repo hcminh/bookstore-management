@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 
 const Book = mongoose.model('book')
-
+const { successNotify, errorNotify } = require('services/returnToUser')
+const { isExist } = require('services/modifyData')
 
 async function getAllBook(req, res, next) {
 	try {
-		return res.render('adminpage/products');
+		listBooks = await Book.find({});
+		return res.render('adminpage/book', {listBooks});
 	} catch (error) {
 		next(error);
 	}
@@ -35,9 +37,11 @@ async function getCreateBook(req, res, next) {
 async function postCreateBook(req, res, next) {
 	try {
 		let book = new Book({ ...req.body });
-		book.save({ validateBeforeSave: true });
-
-		return res.status(200).json(book);
+		if(await isExist("BOOK", book)) {
+			return errorNotify(res, {message: `Tựa sách ${book.name} hoặc mã sách ${book.bookID} đã tồn tại trong hệ thống!`})
+		}
+		await book.save({ validateBeforeSave: true });
+		return successNotify(res, {message: `Thêm thành công tựa sách ${book.name}`})
 
 	} catch (error) {
 		return errorNotify(res, error)
@@ -59,10 +63,11 @@ async function postEditBook(req, res, next) {
 	try {
 		let update = {
 			...req.body,
-			bookID: undefined
+			bookID: undefined,
+			name: undefined
 		}
-		await Book.findOneAndUpdate({ _id: req.params.id }, update, { omitUndefined: true })
-		return success(res, null)
+		let {name} = await Book.findOneAndUpdate({ _id: req.params.id }, update, { omitUndefined: true })
+		return successNotify(res, {message: `Sửa thành công tựa sách ${name}`})
 
 	} catch (error) {
 		return errorNotify(res, error)
@@ -76,7 +81,8 @@ async function postEditBook(req, res, next) {
 async function deleteBook(req, res, next) {
 	try {
 		let deletedBook = await Book.findOneAndDelete({ _id: req.params.id });
-		return res.status(200).json(deletedBook);
+		return successNotify(res, {message: `Xóa thành công tựa sách có mã: ${deletedBook.bookID}`})
+
 	} catch (error) {
 		return errorNotify(res, error)
 	}
@@ -92,19 +98,3 @@ module.exports = {
 	deleteBook
 }
 
-
-
-
-
-
-
-
-
-
-module.exports = {
-	handleGetProduct,
-	handleGetAllProducts,
-	handlePostCreateProduct,
-	handlePostEditProduct,
-	handleDeleteProduct,
-}

@@ -1,12 +1,12 @@
 module.exports = {
     PORT: "3000",
-    SECRET: "Express_Nodejs_Template_secret",
-    DATA_COLLECTION: "Express_Nodejs_Template",
+    SECRET: "Bookstore_Management_secret",
+    DATA_COLLECTION: "Bookstore_Management",
     SESSION: {
-        name: 'session_Express_Nodejs_Template',
+        name: 'session_Bookstore_Management',
         proxy: true,
         resave: true,
-        secret: "session_Express_Nodejs_Template.secrect", // session secret
+        secret: "session_Bookstore_Management.secrect", // session secret
         resave: false,
         saveUninitialized: true,
         cookie: {
@@ -14,6 +14,6 @@ module.exports = {
         }
     },
     DEBUG: {
-        server: "Express_Nodejs_Template"
+        server: "Bookstore_Management"
     }
 }

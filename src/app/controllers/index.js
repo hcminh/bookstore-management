@@ -1,5 +1,5 @@
 
 module.exports = {
-  bookController: require('./products'),
-  customerController: require('./customers'),
+  bookController: require('./book'),
+  customerController: require('./customer'),
 }
