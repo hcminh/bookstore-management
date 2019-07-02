@@ -1,0 +1,156 @@
+<script>
+    var selectedId = '';
+</script>
+<script>
+    function getID(id) {
+        selectedId = id;
+    }
+</script>
+<script>
+
+    /*
+    Khai báo biến
+    */
+
+    let formIDLabel = $('#label-formID');
+    let createDateLabel = $('#label-createDate');
+    let createByLabel = $('#label-createBy');
+    let statusLabel = $('#label-status');
+    let view_form_tbodyLabel = $('#view-form-tbody');
+
+    let form_tbody = $('#form-tbody');
+
+    let td_total = $('#td-total');
+
+
+    /*
+        Component
+    */
+    function componentError(error) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-error-content">
+                        <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                        </div>
+                        <div class="modal-body py-0">
+                            <p>${ error.responseJSON.message}</p>
+                        </div>
+                        <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="removeComponent()">Đóng</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>`
+    }
+    function componentSuccess(success) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-success-content">
+                            <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                            </div>
+                            <div class="modal-body py-0">
+                                <p>${ success.message}</p>
+                            </div>
+                            <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="reLoadPage()">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+    }
+    function removeComponent() {
+        $('#notify-wrapper').children().remove();
+    }
+
+    function componentInfo(item) {
+        return `
+            <tr id='${item.book.book_id}'>
+                <td class="border-none">${item.book.bookID}</td>
+                <td class="border-none">${item.amount}</td>
+                <td class="border-none">${item.book.price}</td>
+                <td class="border-none">${parseInt(item.amount) * parseInt(item.book.price)}</td>
+            </tr>
+                `
+    }
+    /*
+    Xóa sách
+    */
+    function deleteForm() {
+        $.ajax({
+            method: 'DELETE',
+            url: `/admin/importForm/info/${selectedId}`,
+            success: function (success) {
+                $('#delete-modal').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#delete-modal').modal('toggle')
+                $('#notify-wrapper').append(componentError(err))
+            }
+        })
+    }
+
+    /*
+        Xác thực 
+    */
+    function verifyForm() {
+        $.ajax({
+            method: 'POST',
+            url: `/admin/importForm/info/${selectedId}`,
+            success: function (success) {
+                $('#verify-modal').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#verify-modal').modal('toggle')
+                $('#notify-wrapper').append(componentError(err))
+            }
+        })
+    }
+
+
+    /*
+    Cập nhật thông tin khác
+    */
+    function reLoadPage() {
+        location.reload();
+    }
+
+    function emptyModal() {
+        formIDLabel.text('');
+        createDateLabel.text('');
+        createByLabel.text('');
+        statusLabel.text('');
+        view_form_tbodyLabel.children().remove();
+        td_total.text('');
+    }
+
+
+    function addDataToViewModal(item) {
+        formIDLabel.text(item.formID);
+        createDateLabel.text(item.inDate.toLocaleString());
+        createByLabel.text(item.createBy.fullname);
+        statusLabel.text(item.verified ? 'Đã xác nhận' : 'Chưa xác nhận');
+        let totalInForm = 0;
+        for (let i = 0; i < item.importInfo.length; i++) {
+            totalInForm += parseInt(item.importInfo[i].amount) * parseInt(item.importInfo[i].book.price)
+            view_form_tbodyLabel.append(componentInfo(item.importInfo[i]));
+        }
+        td_total.text(totalInForm);
+    }
+
+    function getFormInfo(id) {
+        emptyModal();
+        $.getJSON(`/admin/importForm/info/${id}`, function (data) {
+            addDataToViewModal(data);
+        });
+    }
+
+    // accept only positve number in input
+    function acceptPositiveNumber(event) {
+        return (event.charCode >= 48 && event.charCode <= 57) ? true : event.preventDefault();
+    }
+
+</script>

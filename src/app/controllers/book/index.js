@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Book = mongoose.model('book')
+const ManageBook = mongoose.model('manageBook')
 const { successNotify, errorNotify } = require('services/returnToUser')
 const { isExist } = require('services/modifyData')
 
@@ -40,6 +41,9 @@ async function postCreateBook(req, res, next) {
 		if(await isExist("BOOK", book)) {
 			return errorNotify(res, {message: `Tựa sách ${book.name} hoặc mã sách ${book.bookID} đã tồn tại trong hệ thống!`})
 		}
+
+		let manageBook = new ManageBook({bookID: book.bookID});
+		await manageBook.save();
 		await book.save({ validateBeforeSave: true });
 		return successNotify(res, {message: `Thêm thành công tựa sách ${book.name}`})
 
@@ -81,6 +85,7 @@ async function postEditBook(req, res, next) {
 async function deleteBook(req, res, next) {
 	try {
 		let deletedBook = await Book.findOneAndDelete({ _id: req.params.id });
+		await ManageBook.findOneAndDelete({ bookID: deletedBook.bookID });
 		return successNotify(res, {message: `Xóa thành công tựa sách có mã: ${deletedBook.bookID}`})
 
 	} catch (error) {
