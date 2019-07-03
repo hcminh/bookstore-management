@@ -1,11 +1,16 @@
 var mongoose = require("mongoose");
 
-var formImportBook = new mongoose.Schema({
-    importBooks: {
+var importInfo = new mongoose.Schema({
+    book: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'importBookInfo'
+        ref: 'book',
+        required: true
     },
     amount: {
+        type: Number,
+        default: 0
+    },
+    price: {
         type: Number,
         default: 0
     },
@@ -16,4 +21,4 @@ var formImportBook = new mongoose.Schema({
 });
 
 
-module.exports = formImportBook;
+module.exports = importInfo;

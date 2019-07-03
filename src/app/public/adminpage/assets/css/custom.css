@@ -41,3 +41,14 @@
     border-radius: 10px !important;
     font-size: 1rem;
 }
+
+.border-none {
+    border: none !important
+}
+
+.box-add {
+    background: white;
+    height: 78vh;
+    box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
+    border-radius: 5px;
+}

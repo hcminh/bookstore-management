@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from coderthemes.com/adminto/vertical_dark/tables-datatable.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 21 Mar 2019 13:19:06 GMT -->
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+
+<body class="fixed-left">
+    <div id="notify-wrapper" style="position: absolute">
+    </div>
+    <div id="wrapper">
+
+        <!-- Top Bar Start -->
+        <% include ../partials/navbar %>
+        <!-- Top Bar End -->
+
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <% include ../partials/side-bar %>
+        <!-- Left Sidebar End -->
+
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="content-page">
+            <!-- Start content -->
+            <div class="content">
+                <div class="container-fluid">
+
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="card-box">
+                                <h3 class="m-t-0 px-3">Phiếu nhập sách</h3>
+                                <div class="row px-3">
+                                    <div class="col-6">
+                                        <p class="text-muted font-14">
+                                            Mã phiếu: Chưa lưu phiếu
+                                        </p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="text-muted font-14">
+                                            Ngày tạo:
+                                            <%- new Date().toLocaleString() %>
+                                        </p>
+                                    </div>
+                                    <div class="col-12">
+                                        <p class="text-muted">Nhân viên nhập kho: <%- user.fullname %></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="p-20">
+                                            <div class="form-horizontal" role="form">
+                                                <table class="table table-striped table-bordered" cellspacing="0"
+                                                    width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Mã sách</th>
+                                                            <th>Số lượng</th>
+                                                            <th>Đơn giá</th>
+                                                            <th>Tổng</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="form-tbody">
+
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td class="border-none">Tổng</td>
+                                                            <td class="border-none"></td>
+                                                            <td class="border-none"></td>
+                                                            <td class="border-none" id="td-total">0</td>
+                                                            <td class="border-none"></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                                <div class="form-group row">
+                                                    <div class="col-12 text-right">
+                                                        <button onclick="createForm(event)"
+                                                            class="btn btn-primary waves-effect waves-light">Tạo</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end row -->
+
+                            </div> <!-- end card-box -->
+                        </div><!-- end col -->
+
+                        <div class="col-4">
+                            <div class="box-add">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="p-20">
+                                            <h4 class="mb-5">Thêm sách vào phiếu nhập sách</h4>
+                                            <div class="form-horizontal" role="form">
+                                                <div class="form-group row">
+                                                    <label class="col-3 col-form-label">Mã sách</label>
+                                                    <div class="col-9">
+                                                        <input type="text" class="form-control" id="input-bookID"
+                                                            data-focus="Mã sách">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label class="col-3 col-form-label">Số lượng</label>
+                                                    <div class="col-md-9">
+                                                        <input class="form-control" type="number" id="input-amount" data-focus="Số lượng sách">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <div class="col-12 text-right">
+                                                        <button onclick="addItem()"
+                                                            class="btn btn-primary waves-effect waves-light">Thêm</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- end row -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end row -->
+
+
+                </div> <!-- container -->
+
+            </div> <!-- content -->
+
+            <footer class="footer text-right">
+                2016 - 2019 © Adminto. Coderthemes.com
+            </footer>
+
+        </div>
+
+
+        <!-- ============================================================== -->
+        <!-- End Right content here -->
+        <!-- ============================================================== -->
+
+
+        <!-- Right Sidebar -->
+        <% include ../partials/right-bar %>
+        <!-- /Right-bar -->
+
+    </div>
+    <!-- END wrapper -->
+
+    <!-- Logout Modal-->
+    <% include ../partials/modal-logout %>
+    <!-- Scripts-->
+    <% include ../partials/scripts %>
+
+    <script>
+        let input_bookID = $("#input-bookID");
+        let input_amount = $("#input-amount");
+
+        let tbody_form = $("#form-tbody");
+
+        let td_total = $('#td-total');
+        /*
+ Code kiểm tra thông tin
+ */
+        function CheckValidate(listInput) {
+            listInput.forEach(element => {
+                element.css("border-color", "#E3E3E3");
+            });
+            for (let element of listInput) {
+                if (element.val() == "") {
+                    element.focus();
+                    element.css("border-color", "red")
+                    return { err: true, message: element.attr('data-focus') };
+                }
+            }
+            return { err: false };
+        }
+
+        function valideToAdd() {
+            let array = [input_bookID, input_amount]
+            return (CheckValidate(array));
+        }
+
+        /*
+            Thêm thông tin form
+        */
+        function addItem(toFormID) {
+            let validate = valideToAdd();
+            if (validate.err) {
+                alert("Yêu cầu nhập " + validate.message);
+                return false;
+            }
+
+            $.ajax({
+                method: 'POST',
+                url: `/admin/importForm/create/infos`,
+                dataType: "json",
+                data: {
+                    bookID: input_bookID.val(),
+                    amount: input_amount.val(),
+                },
+                success: function (data) {
+                    addItemToForm(data.data);
+                    clearInput();
+                },
+                error: function (err) {
+                    $('#notify-wrapper').append(componentError(err.responseJSON.message))
+
+                }
+            })
+
+        }
+
+        /*
+            Cập nhật form
+        */
+        function addItemToForm(item) {
+            tbody_form.append(componentInfo(item))
+            calculateTotal(parseInt(item.amount) * parseInt(item.price));
+        }
+
+        /*
+            Cập nhật tổng tiền
+        */
+
+        function calculateTotal(money) {
+            td_total.text(parseInt(td_total.text()) + parseInt(money));
+        }
+
+        /*
+            Tạo form trong csdl 
+        */
+        function createForm(event) {
+            if (tbody_form.children().length <= 0) {
+                alert("Yêu cầu phải có thông tin phiếu nhập sách ");
+                return false;
+            }
+            let formInfos = [];
+            for (let i = 0; i < tbody_form.children().length; i++) {
+                let info = {
+                    book: tbody_form.children()[i].getAttribute('id'),
+                    amount: parseInt(tbody_form.children()[i].children[1].innerText),
+                    price: parseInt(tbody_form.children()[i].children[2].innerText),
+                    total: parseInt(tbody_form.children()[i].children[3].innerText),
+                }
+                formInfos.push(info)
+            }
+            $.ajax({
+                method: 'POST',
+                url: `/admin/importForm/create`,
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify(formInfos),
+                success: function (success) {
+                    $('#notify-wrapper').append(componentSuccess(success.message))
+                },
+                error: function (err) {
+                    $('#notify-wrapper').append(componentError(err.responseJSON.message))
+
+                }
+            })
+            return false;
+        }
+
+        /*
+            Component
+        */
+        function componentError(message) {
+            return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-error-content">
+                        <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                        </div>
+                        <div class="modal-body py-0">
+                            <p>${message}</p>
+                        </div>
+                        <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="removeComponent()">Đóng</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>`
+        }
+        function componentSuccess(message) {
+            return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-success-content">
+                            <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                            </div>
+                            <div class="modal-body py-0">
+                                <p>${message}</p>
+                            </div>
+                            <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="removeComponent()">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+        }
+
+        function componentInfo(item) {
+            return `
+            <tr id='${item.book}'>
+                <td class="border-none">${item.book_id}</td>
+                <td class="border-none">${item.amount}</td>
+                <td class="border-none">${item.price}</td>
+                <td class="border-none">${parseInt(item.amount) * parseInt(item.price)}</td>
+                <td class="border-none text-center"><button
+                    type="button"
+                        class="btn btn-outline-danger"
+                        style="font-size: xx-small;padding: 3px 7px !important;"
+                        onclick="removeComponentInfo('${item.book}')"><i class="fa fa-trash"></i></button></td>
+            </tr>
+            `
+        }
+
+        function removeComponent() {
+            $('#notify-wrapper').children().remove();
+        }
+
+        function removeComponentInfo(id) {
+            let tr = $('#' + id);
+            calculateTotal(`-${tr.children()[3].innerText}`)
+            tr.remove();
+            return false
+        }
+        /*
+            Xóa input
+        */
+        function clearInput() {
+            input_bookID.val('');
+            input_amount.val(0);
+        }
+    </script>
+
+
+</body>
+
+
+</html>

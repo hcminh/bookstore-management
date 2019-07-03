@@ -9,8 +9,11 @@ module.exports = {
     inventory: require('./report/inventory'),
     inventoryReport: require('./report/inventoryReport'),
 
-    importBookForm: require('./importBookForm'),
-    importBookInfo: require('./importBookInfo'),
+    importForm: require('./importForm'),
+    importInfo: require('./importInfo'),
     order: require('./order'),
     receipt: require('./receipt'),
+
+    //to manage
+    manageBook: require('./manageBook'),
   }
