@@ -1,19 +1,16 @@
 const mongoose = require('mongoose');
 
 const Form = mongoose.model('importForm')
-const Info = mongoose.model('importInfo')
 const Book = mongoose.model('book')
 const ManageBook = mongoose.model('manageBook')
 
 const MIN_OF_BOOKS = 300
 
 const { successNotify, errorNotify, success } = require('services/returnToUser')
-const { isExist } = require('services/modifyData')
 
 async function getAllForm(req, res, next) {
 	try {
 		listForms = await Form.find({}).populate('createBy');
-		console.log(listForms)
 		return res.render('adminpage/importForm', { listForms });
 	} catch (error) {
 		next(error);
@@ -26,7 +23,6 @@ async function getFormInfo(req, res, next) {
 		let form = await Form.findOne({ _id: req.params.id }).populate('createBy')
 			.populate('verifiedBy')
 			.populate('importInfo.book');
-		console.log(form)
 		return res.json(form);
 	} catch (error) {
 		next(error);
@@ -135,7 +131,6 @@ module.exports = {
 	getFormInfo,
 	getCreateForm,
 	postCreateForm,
-	getEditForm,
 	postVerifyForm,
 	deleteForm,
 	postCheckCreateInfo
