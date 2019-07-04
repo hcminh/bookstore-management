@@ -1,0 +1,83 @@
+<!--  Modal content for the above example -->
+<div class="modal fade bs-example-modal-lg" tabindex="-1" id="view-modal" role="dialog" aria-labelledby="view-bill"
+  aria-hidden="true" style="display: none;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header b-0">
+        <h4 class="modal-title mt-0" id="view-bill">Thông tin Hóa đơn</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <div class="modal-body p-0">
+          <div class="card o-hidden border-0 shadow-lg my-0 py-4">
+              <!-- Nested Row within Card Body -->
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="pb-3 px-5">
+
+                      <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="">Mã hóa đơn:</label>
+                          <label id="label-billID" class="form-control-user"></label>
+                        </div>
+                        <div class="col-sm-6">
+                          <label for="">Ngày tạo:</label>
+                          <label id="label-createDate" class="form-control-user"></label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="">Người tạo:</label>
+                          <label id="label-createBy" class="form-control-user"></label>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="">Khách hàng:</label>
+                          <label id="label-customer" class="form-control-user"></label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                          <div class="col-12">
+                                  <div class="form-horizontal" role="form">
+                                      <table class="table table-striped table-bordered" cellspacing="0"
+                                          width="100%">
+                                          <thead>
+                                              <tr>
+                                                  <th>Mã sách</th>
+                                                  <th>Số lượng</th>
+                                                  <th>Đơn giá</th>
+                                                  <th>Tổng</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody id="view-tbody">
+
+                                          </tbody>
+                                          <tfoot>
+                                              <tr>
+                                                  <td class="border-none">Tổng</td>
+                                                  <td class="border-none"></td>
+                                                  <td class="border-none"></td>
+                                                  <td class="border-none" id="td-total">0</td>
+                                              </tr>
+                                          </tfoot>
+                                      </table>
+                                  </div>
+                          </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-sm-10"></div>
+                        <div class="col-sm-2">
+                          <button data-dismiss="modal" class="btn btn-primary btn-user btn-block">
+                            Close
+                          </button>
+                        </div>
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+              <!-- end row -->
+          </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -8,7 +8,7 @@ const MIN_OF_BOOKS = 300
 
 const { successNotify, errorNotify, success } = require('services/returnToUser')
 
-async function getAllForm(req, res, next) {
+async function getAll(req, res, next) {
 	try {
 		listForms = await Form.find({}).populate('createBy');
 		return res.render('adminpage/importForm', { listForms });
@@ -18,7 +18,7 @@ async function getAllForm(req, res, next) {
 }
 
 
-async function getFormInfo(req, res, next) {
+async function getInfo(req, res, next) {
 	try {
 		let form = await Form.findOne({ _id: req.params.id }).populate('createBy')
 			.populate('verifiedBy')
@@ -32,7 +32,7 @@ async function getFormInfo(req, res, next) {
 /** 
  * Create new Form
  */
-async function getCreateForm(req, res, next) {
+async function getCreatePage(req, res, next) {
 	try {
 		return res.render('adminpage/importForm/create', { user: req.user });
 	} catch (error) {
@@ -40,7 +40,7 @@ async function getCreateForm(req, res, next) {
 	}
 }
 
-async function postCheckCreateInfo(req, res, next) {
+async function postInfo(req, res, next) {
 	try {
 		let info = {
 			...req.body
@@ -69,7 +69,7 @@ async function postCheckCreateInfo(req, res, next) {
 
 
 
-async function postCreateForm(req, res, next) {
+async function postCreate(req, res, next) {
 	try {
 		let infos = { ...req.body }
 		let newForm = new Form();
@@ -88,7 +88,7 @@ async function postCreateForm(req, res, next) {
 /** 
  * Edit Form
  */
-async function getEditForm(req, res, next) {
+async function getEditPage(req, res, next) {
 	try {
 		return res.render('adminpage/importForm/edit');
 	} catch (error) {
@@ -96,7 +96,7 @@ async function getEditForm(req, res, next) {
 	}
 }
 
-async function postVerifyForm(req, res, next) {
+async function postVerify(req, res, next) {
 	try {
 		let verifyForm = await Form.findOne({ _id: req.params.id, verified: false}).populate('importInfo.book');
 		if(!verifyForm)
@@ -120,7 +120,7 @@ async function postVerifyForm(req, res, next) {
 	DELETE form
 */
 
-async function deleteForm(req, res, next) {
+async function remove(req, res, next) {
 	try {
 		let deletedForm = await Form.findOneAndDelete({ _id: req.params.id });
 		return successNotify(res, { message: `Xóa thành công Phiếu nhập sách có mã: ${deletedForm.formID}` })
@@ -131,12 +131,13 @@ async function deleteForm(req, res, next) {
 }
 
 module.exports = {
-	getAllForm,
-	getFormInfo,
-	getCreateForm,
-	postCreateForm,
-	postVerifyForm,
-	deleteForm,
-	postCheckCreateInfo
+	getAll,
+	getInfo,
+	getCreatePage,
+	postInfo,
+	postCreate,
+	getEditPage,
+	postVerify,
+	remove
 }
 

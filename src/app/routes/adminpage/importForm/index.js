@@ -6,19 +6,19 @@ const { IS_ADMIN, IS_EMPLOYEE } = require("config/constants");
 const { checkPermission } = require("services/checkPermission");
 
 router.route('/')
-.get(controller.getAllForm)
+.get(controller.getAll)
 
 router.route('/create')
-.get(controller.getCreateForm)
-.post(controller.postCreateForm)
+.get(controller.getCreatePage)
+.post(controller.postCreate)
 
 router.route('/create/infos')
-.post(controller.postCheckCreateInfo)
+.post(controller.postInfo)
 
 router.route('/info/:id')
-.get(controller.getFormInfo)
-.post(controller.postVerifyForm)
-.delete(controller.deleteForm);
+.get(controller.getInfo)
+.post(controller.postVerify)
+.delete(controller.remove);
 
 
 
