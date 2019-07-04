@@ -1,23 +1,19 @@
 <table id="datatable" class="table table-bordered">
   <thead>
     <tr>
+      <th>Mã khách hàng</th>
       <th>Tên khách hàng</th>
-      <th>Số điện thoại</th>
-      <th>Loại</th>
-      <th>Ngày đăng kí</th>
+      <th>Chi tiêu</th>
       <th>Hành động</th>
     </tr>
   </thead>
   <tbody>
-    <% if(typeof customers != 'undefined') { %>
-    <% customers.forEach(item => { %>
+    <% if(typeof listCustomer != 'undefined') { %>
+    <% listCustomer.forEach(item => { %>
     <tr>
+      <td><%- item.customerID %></td>
       <td><%- item.fullname %></td>
-      <td><%- item.phone %></td>
-      <td><%- item.type %></td>
-      <td>
-        <%- item.joinDate.getDate() %>/<%- item.joinDate.getMonth() + 1 %>/<%- item.joinDate.getFullYear() %>
-      </td>
+      <td><%- item.total %></td>
       <td class="text-center">
         <button class="btn btn-outline-success" data-toggle="modal" data-target="#view-modal"
           onclick="getCustomerInfo('<%- item._id %>')">Xem</button>

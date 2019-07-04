@@ -1,0 +1,140 @@
+<script>
+    var selectedId = '';
+</script>
+<script>
+    function getID(id) {
+        selectedId = id;
+    }
+</script>
+<script>
+
+    /*
+    Khai báo biến
+    */
+
+    let billIDLabel = $('#label-billID');
+    let createDateLabel = $('#label-createDate');
+    let createByLabel = $('#label-createBy');
+    let customerLabel = $('#label-customer');
+    let view_tbodyLabel = $('#view-tbody');
+
+    let _tbody = $('#bill-tbody');
+
+    let td_total = $('#td-total');
+
+
+    /*
+        Component
+    */
+    function componentError(error) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-error-content">
+                        <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                        </div>
+                        <div class="modal-body py-0">
+                            <p>${ error.responseJSON.message}</p>
+                        </div>
+                        <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="removeComponent()">Đóng</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>`
+    }
+    function componentSuccess(success) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-success-content">
+                            <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                            </div>
+                            <div class="modal-body py-0">
+                                <p>${ success.message}</p>
+                            </div>
+                            <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="reLoadPage()">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+    }
+    function removeComponent() {
+        $('#notify-wrapper').children().remove();
+    }
+
+    function componentInfo(item) {
+        return `
+            <tr id='${item.book.book_id}'>
+                <td class="border-none">${item.book.bookID}</td>
+                <td class="border-none">${item.amount}</td>
+                <td class="border-none">${item.book.price}</td>
+                <td class="border-none">${parseInt(item.amount) * parseInt(item.book.price)}</td>
+            </tr>
+                `
+    }
+    /*
+    Xóa sách
+    */
+    function deleteBill() {
+        $.ajax({
+            method: 'DELETE',
+            url: `/admin/bill/info/${selectedId}`,
+            success: function (success) {
+                $('#delete-modal').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#delete-modal').modal('toggle')
+                $('#notify-wrapper').append(componentError(err))
+            }
+        })
+    }
+
+
+
+    /*
+    Cập nhật thông tin khác
+    */
+    function reLoadPage() {
+        location.reload();
+    }
+
+    function emptyModal() {
+        billIDLabel.text('');
+        createDateLabel.text('');
+        createByLabel.text('');
+        customerLabel.text('');
+        view_tbodyLabel.children().remove();
+        td_total.text('');
+    }
+
+
+    function addDataToViewModal(item) {
+        billIDLabel.text(item.billID);
+        createDateLabel.text(item.createDate.toLocaleString());
+        createByLabel.text(item.createBy.fullname);
+        customerLabel.text(typeof item.customer != 'undefined' ? item.customer.fullname : '');
+        let totalInBill = 0;
+        for (let i = 0; i < item.listBook.length; i++) {
+            totalInBill += parseInt(item.listBook[i].amount) * parseInt(item.listBook[i].book.price)
+            view_tbodyLabel.append(componentInfo(item.listBook[i]));
+        }
+        td_total.text(totalInBill);
+    }
+
+    function getInfo(id) {
+        emptyModal();
+        $.getJSON(`/admin/bill/info/${id}`, function (data) {
+            console.log(data);
+            addDataToViewModal(data);
+        });
+    }
+
+    // accept only positve number in input
+    function acceptPositiveNumber(event) {
+        return (event.charCode >= 48 && event.charCode <= 57) ? true : event.preventDefault();
+    }
+
+</script>

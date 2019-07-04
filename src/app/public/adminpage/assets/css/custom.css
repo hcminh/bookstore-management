@@ -51,4 +51,30 @@
     height: 78vh;
     box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
     border-radius: 5px;
+    overflow: hidden;
+}
+
+p.text-muted.info-customer::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    background: #98a6ad;
+    width: 500px;
+    height: 2px;
+}
+p.text-muted.info-customer::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    background: #98a6ad;
+    width: 500px;
+    height: 2px;
+}
+
+p.text-muted.info-customer {
+    padding-right: 5px;
+    display: inline-block;
+    position: relative;
 }
