@@ -33,7 +33,7 @@ async function postCreateCustomer(req, res, next) {
 
 		await customer.save({ validateBeforeSave: true })
 
-		return res.render('adminpage/customer/create', { success: "Tạo tài khoản khách hàng thành công" })
+		return res.render('adminpage/customer', { success: "Tạo tài khoản khách hàng thành công" })
 
 	} catch (error) {
 		return errorNotify(res, error)
@@ -59,7 +59,7 @@ async function postEditCustomer(req, res, next) {
 
 		await Customer.findOneAndUpdate({ _id: req.params.id }, update, { omitUndefined: true })
 
-		return res.render('adminpage/customer/edit', { success: "Thay đổi thông tin tài khoản khách hàng thành công!" })
+		return res.render('adminpage/customer', { success: "Thay đổi thông tin tài khoản khách hàng thành công!" })
 
 
 	} catch (error) {

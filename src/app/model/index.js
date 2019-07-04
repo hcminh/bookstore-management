@@ -12,7 +12,6 @@ module.exports = {
   inventory: mongoose.model('inventory', schema.inventory),
   inventoryReport: mongoose.model('inventoryReport', schema.inventoryReport),
   importForm: mongoose.model('importForm', schema.importForm),
-  importInfo: mongoose.model('importInfo', schema.importInfo),
   order: mongoose.model('order', schema.order),
   receipt: mongoose.model('receipt', schema.receipt),
 }
