@@ -8,6 +8,10 @@ var manageBook = new mongoose.Schema({
   amount: {
     type: Number,
     default: 0
+  },
+  minQuantity: {
+    type: Number,
+    default: 0
   }
 });
 

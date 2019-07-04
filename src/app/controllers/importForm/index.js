@@ -54,6 +54,10 @@ async function postCheckCreateInfo(req, res, next) {
 		if (manageBook.amount >= MIN_OF_BOOKS) {
 			return errorNotify(res, { message: `Chỉ cho nhập tựa sách có lượng tồn bé hơn ${MIN_OF_BOOKS}` })
 		}
+		
+		if (req.body.amount < manageBook.minQuantity) {
+			return errorNotify(res, { message: `Số lượng nhập phải lớn hơn ${manageBook.minQuantity}` })
+		}
 		//is ok
 		info.book = book._id;
 		info.price = book.price;
