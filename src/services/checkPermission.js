@@ -29,5 +29,17 @@ module.exports = {
         return redirectLogin(res);
       }
     };
+  },
+  virtualUser: () => {
+
+    // return a middleware
+    return (req, res, next) => {
+      req.user = {
+        fullname: "Hoàng Công Minh",
+        _id: "5d1bb19d17c1d116984e9f64"
+      }
+      next();
+        
+    };
   }
 };

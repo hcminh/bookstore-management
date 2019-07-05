@@ -1,6 +1,6 @@
 
 const router = require('express').Router();
-const controller = require('app/controllers').billController;
+const controller = require('app/controllers').importFormController;
 
 const { IS_ADMIN, IS_EMPLOYEE } = require("config/constants");
 const { checkPermission } = require("services/checkPermission");
@@ -17,6 +17,7 @@ router.route('/create/infos')
 
 router.route('/info/:id')
 .get(controller.getInfo)
+.post(controller.postVerify)
 .delete(controller.remove);
 
 

@@ -7,49 +7,37 @@ var { send } = require('services/sendMail');
 router.get('/', async (req, res, next) => {
     let insert = {
         username: "admin",
-        password: "123",
-        fullname: "Admin",
-        roles: "ADMIN",
-        email: "admin@gmail.com",
-        employeeId: "test",
-        birth: Date.now(),
-        address: "test",
-        phone: "test",
-        idCode: "test",
+        password: "1",
+        fullname: "Hoàng Công Minh",
+        roles: ["*"]
     }
     const saltRounds = 10;
     bcrypt.hash(insert.password, saltRounds, async (err, hash) => {
         insert.password = hash;
-        let usersInfo = await mongoose.model('users').create(insert)
+        let usersInfo = await mongoose.model('user').create(insert)
         console.log(usersInfo)
-    });
-    let insert2 = {
-        username: "employee",
-        password: "123",
-        fullname: "employee",
-        roles: "EMPLOYEE",
-        email: "employee@gmail.com",
-        employeeId: "employee",
-        birth: Date.now(),
-        address: "employee",
-        phone: "employee",
-        idCode: "employee",
-    }
-    bcrypt.hash(insert2.password, saltRounds, async (err, hash) => {
-        insert2.password = hash;
-        let usersInfo2= await mongoose.model('users').create(insert2)
-        console.log(usersInfo2)
     });
     return success(res, "Done")
 });
 
-router.get('/sendmail', async (req, res, next) => {
-    try {
-        
-			let contentMail = `<h1>Your password to login our system is: </h1>`
-			await send("hoangminhh17@gmail.com", "New Account", contentMail);
-    } catch (error) {
-        next(error)
+
+router.get('/phieu', async (req, res, next) => {
+    let insert = {
+        formID: "form-" + new Date().getTime(),
+        createBy: "5d1bb19d17c1d116984e9f64",
     }
-})
+    await mongoose.model('importForm').create(insert)
+    return success(res, "Done")
+});
+
+router.get('/phieu2', async (req, res, next) => {
+    let insert = {
+        _id: "1251jedfhk412j3l12",
+        formID: "form-" + new Date().getTime(),
+        createBy: "5d1870f6b6409605d46e535f",
+    }
+    await mongoose.model('importForm').create(insert)
+    return success(res, "Done")
+});
+
 module.exports = router;

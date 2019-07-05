@@ -19,7 +19,7 @@ var customer = new mongoose.Schema({
   },
   customerID: {
       type: String,
-      default: "customer-" + new Date()
+      default: "CUSTOMER-" + new Date().getTime()
   },
   totalMoney: {
       type: Number,
