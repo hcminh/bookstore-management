@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Bill = mongoose.model('bill');
 const Book = mongoose.model('book');
+const Customer = mongoose.model('customer');
 const ManageBook = mongoose.model('manageBook');
 
 const MIN_OF_AVAILABLE = 20
@@ -25,7 +26,6 @@ async function getInfo(req, res, next) {
 			.populate('createBy')
 			.populate('customer')
 			.populate('listBook.book');
-		console.log(bill)
 		return res.json(bill);
 	} catch (error) {
 		next(error);
@@ -71,15 +71,18 @@ async function postInfo(req, res, next) {
 async function postCreate(req, res, next) {
 	try {
 		let infos = { ...req.body }
-		console.log(infos)
 		let newBill = new Bill();
 		newBill.total = 0;
 		newBill.createBy = req.user._id;
-		if (infos.customerID != '')
-			newBill.customer = infos.customerID;
 		for (let item in infos.infos) {
 			newBill.listBook.push(infos.infos[item]);
 			newBill.total += infos.infos[item].total;
+		}
+		if (infos.customerID != '') {
+			let customer = await Customer.findOne({ customerID: infos.customerID })
+			customer.totalMoney += newBill.total;
+			newBill.customer = customer._id;
+			customer.save();
 		}
 		await newBill.save();
 		return successNotify(res, { message: `Lưu hóa đơn thành công!` })
