@@ -35,14 +35,6 @@ app.use(passport.initialize());
 app.use(passport.session()); //persistent login sessions
 
 
-if (process.env.IS_DEV != 'DEV' || process.env.IS_DEV == 'undefined') {
-  app.disable('/setup');
-}
-else {
-  app.use('/setup', require('app/routes/setup'));
-}
-
-
 require('config/passport')(passport);
 require('app/routes')(app);
 
