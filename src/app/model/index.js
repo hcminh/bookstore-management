@@ -8,6 +8,5 @@ module.exports = {
   manageBook: mongoose.model('manageBook', schema.manageBook),
   bill: mongoose.model('bill', schema.bill),
   importForm: mongoose.model('importForm', schema.importForm),
-  receipt: mongoose.model('receipt', schema.receipt),
   rule: mongoose.model('rule', schema.rule),
 }

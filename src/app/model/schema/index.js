@@ -4,7 +4,6 @@ module.exports = {
     book: require('./entity/book'),
 
     importForm: require('./importForm'),
-    receipt: require('./receipt'),
     bill: require('./bill'),
 
     //to manage
