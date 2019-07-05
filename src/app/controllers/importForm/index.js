@@ -11,7 +11,7 @@ const { successNotify, errorNotify, success } = require('services/returnToUser')
 async function getAll(req, res, next) {
 	try {
 		listForms = await Form.find({}).populate('createBy');
-		return res.render('adminpage/importForm', { listForms });
+		return res.render('adminpage/importForm', { listForms, user: req.user  });
 	} catch (error) {
 		next(error);
 	}
@@ -86,16 +86,6 @@ async function postCreate(req, res, next) {
 	}
 }
 
-/** 
- * Edit Form
- */
-async function getEditPage(req, res, next) {
-	try {
-		return res.render('adminpage/importForm/edit');
-	} catch (error) {
-		next(error);
-	}
-}
 
 async function postVerify(req, res, next) {
 	try {
@@ -137,7 +127,6 @@ module.exports = {
 	getCreatePage,
 	postInfo,
 	postCreate,
-	getEditPage,
 	postVerify,
 	remove
 }

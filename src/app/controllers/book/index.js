@@ -7,7 +7,7 @@ const { successNotify, errorNotify } = require('services/returnToUser')
 async function getAllBook(req, res, next) {
 	try {
 		listBooks = await Book.find({});
-		return res.render('adminpage/book', {listBooks});
+		return res.render('adminpage/book', {listBooks, user: req.user});
 	} catch (error) {
 		next(error);
 	}
@@ -28,7 +28,7 @@ async function getBookInfo(req, res, next) {
  */
 async function getCreateBook(req, res, next) {
 	try {
-		return res.render('adminpage/book/create');
+		return res.render('adminpage/book/create', { user: req.user });
 	} catch (error) {
 		next(error);
 	}
@@ -52,16 +52,6 @@ async function postCreateBook(req, res, next) {
 	}
 }
 
-/** 
- * Edit Book
- */
-async function getEditBook(req, res, next) {
-	try {
-		return res.render('adminpage/book/edit');
-	} catch (error) {
-		next(error);
-	}
-}
 
 async function postEditBook(req, res, next) {
 	try {
@@ -96,9 +86,7 @@ async function deleteBook(req, res, next) {
 module.exports = {
 	getAllBook,
 	getBookInfo,
-	getCreateBook,
 	postCreateBook,
-	getEditBook,
 	postEditBook,
 	deleteBook
 }

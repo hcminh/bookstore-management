@@ -12,7 +12,7 @@ async function getRule(req, res, next) {
 			rule = new Rule();
 			await rule.save()
 		}
-		return res.render('adminpage/rule', { rule })
+		return res.render('adminpage/rule', { rule, user: req.user  })
 	} catch (error) {
 		next(error);
 	}
@@ -21,8 +21,6 @@ async function getRule(req, res, next) {
 
 async function postRule(req, res, next) {
 	try {
-		
-		let newRule = new Rule({...req.body});
 		let rule = await Rule.findOne({});
 		console.log(rule)
 		await Rule.findOneAndUpdate({_id: rule._id}, {...req.body}, { omitUndefined: true })

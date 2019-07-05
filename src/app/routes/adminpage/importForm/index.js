@@ -9,6 +9,7 @@ router.route('/')
 .get(controller.getAll)
 
 router.route('/create')
+.get(controller.getCreatePage)
 .post(controller.postCreate)
 
 router.route('/create/infos')

@@ -4,7 +4,7 @@ const { WAREHOUSE_MANAGER, EMPLOYEE_MANAGER, CUSTOMER_MANAGER, WAREHOUSE_STAFF, 
 const { checkPermission } = require("services/checkPermission");
 
 router.get('/', (req, res, next) => {
-    return res.render('adminpage');
+    return res.render('adminpage', { user: req.user });
 })
 
 router.use('/bill', checkPermission(SALESMAN), require('./bill'));

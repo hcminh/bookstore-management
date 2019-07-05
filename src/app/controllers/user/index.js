@@ -9,8 +9,8 @@ const saltRounds = 10;
 
 async function getAll(req, res, next) {
 	try {
-		let listUsers = await User.find({})
-		return res.render('adminpage/user', { listUsers })
+		let listUsers = await User.find({_id: {$ne: req.user._id}})
+		return res.render('adminpage/user', { listUsers, user: req.user  })
 	} catch (error) {
 		next(error);
 	}

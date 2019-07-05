@@ -9,7 +9,7 @@ const Customer = mongoose.model('customer');
 async function getAllCustomer(req, res, next) {
 	try {
 		let listCustomer = await Customer.find({})
-		return res.render('adminpage/customer', { listCustomer })
+		return res.render('adminpage/customer', { listCustomer, user: req.user })
 	} catch (error) {
 		next(error);
 	}
@@ -17,7 +17,7 @@ async function getAllCustomer(req, res, next) {
 
 async function getCreateCustomer(req, res, next) {
 	try {
-		return res.render('adminpage/customer/create')
+		return res.render('adminpage/customer/create', { user: req.user })
 	} catch (error) {
 		next(error);
 	}
@@ -33,20 +33,13 @@ async function postCreateCustomer(req, res, next) {
 
 		await customer.save({ validateBeforeSave: true })
 
-		return res.render('adminpage/customer', { success: "Tạo tài khoản khách hàng thành công" })
+		return res.render('adminpage/customer', { success: "Tạo tài khoản khách hàng thành công", user: req.user  })
 
 	} catch (error) {
 		return errorNotify(res, error)
 	}
 }
 
-async function getEditCustomer(req, res, next) {
-	try {
-		return res.render('adminpage/customer/edit')
-	} catch (error) {
-		next(error);
-	}
-}
 
 async function postEditCustomer(req, res, next) {
 	try {
@@ -59,7 +52,7 @@ async function postEditCustomer(req, res, next) {
 
 		await Customer.findOneAndUpdate({ _id: req.params.id }, update, { omitUndefined: true })
 
-		return res.render('adminpage/customer', { success: "Thay đổi thông tin tài khoản khách hàng thành công!" })
+		return res.render('adminpage/customer', { success: "Thay đổi thông tin tài khoản khách hàng thành công!", user: req.user  })
 
 
 	} catch (error) {
@@ -91,7 +84,6 @@ module.exports = {
 	getAllCustomer,
 	getCreateCustomer,
 	postCreateCustomer,
-	getEditCustomer,
 	postEditCustomer,
 	getCustomerInfo,
 	deleteCustomer

@@ -11,7 +11,7 @@ const { successNotify, errorNotify, success } = require('services/returnToUser')
 async function getAll(req, res, next) {
 	try {
 		listBills = await Bill.find({}).populate('createBy');
-		return res.render('adminpage/bill', { listBills });
+		return res.render('adminpage/bill', { listBills, user: req.user  });
 	} catch (error) {
 		next(error);
 	}
