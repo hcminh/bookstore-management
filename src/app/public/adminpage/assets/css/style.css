@@ -3511,6 +3511,7 @@ File: Pages
   border: none;
   color: #ffffff !important;
   font-family: "Roboto", sans-serif !important;
+  position: absolute;
 }
 
 .morris-hover.morris-default-style .morris-hover-point {
