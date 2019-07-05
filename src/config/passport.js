@@ -15,7 +15,7 @@ module.exports = passport =>  {
   // Deserialize user from session
   // When user login to system at the second time, passport will find id in session and return their user info.
   passport.deserializeUser((id, done) => {
-    mongoose.model('users').findById(id, (err, user) => {
+    mongoose.model('user').findById(id, (err, user) => {
       if (err) done(err);
       
       if (user) {
@@ -27,7 +27,7 @@ module.exports = passport =>  {
 
   passport.use('local', new LocalStrategy(
     (username, password, done) => {
-      mongoose.model('users').findOne({ username: username }, (err, userDoc) => {
+      mongoose.model('user').findOne({ username: username }, (err, userDoc) => {
         if (err) done(err);
         if (userDoc) {
           bcrypt.compare(password, userDoc.password, (err, isMatch) => {
