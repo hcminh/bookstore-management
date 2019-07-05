@@ -23,16 +23,7 @@ async function getBookInfo(req, res, next) {
 	}
 }
 
-/** 
- * Create new Book
- */
-async function getCreateBook(req, res, next) {
-	try {
-		return res.render('adminpage/book/create', { user: req.user });
-	} catch (error) {
-		next(error);
-	}
-}
+
 
 async function postCreateBook(req, res, next) {
 	try {
@@ -42,7 +33,7 @@ async function postCreateBook(req, res, next) {
 			return errorNotify(res, {message: `Tựa sách ${book.name} hoặc mã sách ${book.bookID} đã tồn tại trong hệ thống!`})
 		}
 
-		let manageBook = new ManageBook({bookID: book.bookID});
+		let manageBook = new ManageBook({bookID: book.bookID, book: book._id});
 		await manageBook.save();
 		await book.save({ validateBeforeSave: true });
 		return successNotify(res, {message: `Thêm thành công tựa sách ${book.name}`})
