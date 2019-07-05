@@ -37,7 +37,8 @@ async function getCreateBook(req, res, next) {
 async function postCreateBook(req, res, next) {
 	try {
 		let book = new Book({ ...req.body });
-		if(await isExist("BOOK", book)) {
+		let existBook = await Book.findOne({$or: [{name: book.name}, {bookID: book.bookID}]})
+		if(existBook) {
 			return errorNotify(res, {message: `Tựa sách ${book.name} hoặc mã sách ${book.bookID} đã tồn tại trong hệ thống!`})
 		}
 
