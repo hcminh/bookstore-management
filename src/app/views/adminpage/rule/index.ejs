@@ -72,11 +72,11 @@
           <div class="row">
             <div class="col-12">
               <div class="card-box table-responsive">
-                <h4 class="m-t-0 header-title">Quản lý loại khách hàng</h4>
+                <h4 class="m-t-0 header-title">Quản lý khách hàng</h4>
 
                 <!-- Add product button -->
                 <button class="btn btn-primary waves-effect waves-light" data-toggle="modal"
-                  data-target="#modal-create">Thêm loại Khách hàng</button>
+                  data-target="#modal-create">Tạo tài khoản Khách hàng</button>
                 <p class="text-muted font-14 m-b-30"></p>
 
                 <% include ./table %>
@@ -128,16 +128,15 @@
 
 
     /*
-    Code để tạo loại tài khoản khách hàng - đầu
+    Code để tạo mới tài khoản khách hàng - đầu
     */
-    let inputTypeName = $('input[name="typeName"]');
-    let inputDescription = $('textarea[name="description"]');
-    let inputDiscount = $('input[name="discount"]');
-    let inputTypeID = $('input[name="typeID"]');
-    let inputMinPaid = $('input[name="minPaid"]');
+    let inputFullname = $('input[name="fullname"]');
+    let inputPhone = $('input[name="phone"]');
+    let inputAddress = $('input[name="address"]');
+    let inputEmail = $('input[name="email"]');
 
     function CheckValideDataToCreate() {
-      let array = [inputTypeName, inputDescription, inputDiscount, inputTypeID, inputMinPaid]
+      let array = [inputFullname, inputPhone, inputAddress, inputEmail]
       return (CheckValidate(array));
     }
 
@@ -161,29 +160,24 @@
     Code để sửa thông tin tài khoản khách hàng - đầu
     */
 
-    let typeNameEditInput = $('#editInput-typeName');
-    let descriptionEditInput = $('#editInput-description');
-    let discountEditInput = $('#editInput-discount');
-    let typeIDEditInput = $('#editInput-typeID');
-    let minPaidEditInput = $('#editInput-minPaid');
+    let fullnameEditInput = $('#editInput-fullname');
+    let phoneEditInput = $('#editInput-phone');
+    let addressEditInput = $('#editInput-address');
+    let emailEditInput = $('#editInput-email');
+    let customerIdEditInput = $('#editInput-customerId');
     let formEdit = $('#form-edit');
 
-    function addDataToEditModal(type) {
-      formEdit.attr('action', `/admin/customerType/info/${type._id}`);
-      typeNameEditInput.val(type.typeName)
-      descriptionEditInput.val(type.description)
-      discountEditInput.val(type.discount)
-      typeID.val(type.typeID)
-      minPaid.val(type.minPaid)
-    }
-
-    function CheckValideDataToEdit() {
-      let array = [typeNameEditInput, descriptionEditInput, discountEditInput]
-      return (CheckValidate(array));
+    function addDataToEditModal(customer) {
+      formEdit.attr('action', `/admin/customer/info/${customer._id}`);
+      fullnameEditInput.val(customer.fullname)
+      phoneEditInput.val(customer.phone)
+      addressEditInput.val(customer.address)
+      emailEditInput.val(customer.email)
+      customerIdEditInput.val(customer.customerID)
     }
 
     $('#form-edit').on('submit', (function (e) {
-      let validate = CheckValideDataToEdit();
+      let validate = CheckValideData();
       if (validate.err) {
         e.preventDefault();
         alert("Yêu cầu nhập " + validate.message);
@@ -200,24 +194,26 @@
     /*
     Code để xem thông tin tài khoản khách hàng - đầu
     */
-    let typeNameLabel = $('#label-typeName');
-    let descriptionLabel = $('#label-description');
-    let discountLabel = $('#label-discount');
-    let typeIDLabel = $('#label-typeID');
-    let minPaidLabel = $('#label-minPaid');
+    let fullnameLabel = $('#label-fullname');
+    let phoneLabel = $('#label-phone');
+    let addressLabel = $('#label-address');
+    let emailLabel = $('#label-email');
+    let customerIdLabel = $('#label-customerId');
+    let totalMoneyLabel = $('#label-totalMoney');
 
-    function addDataToViewModal(type) {
-      typeNameLabel.text(type.typeName)
-      descriptionLabel.text(type.description)
-      discountLabel.text(type.discount)
-      typeIDLabel.text(type.typeID)
-      minPaidLabel.text(type.minPaid)
+    function addDataToViewModal(customer) {
+      fullnameLabel.text(customer.fullname)
+      phoneLabel.text(customer.phone)
+      addressLabel.text(customer.address)
+      emailLabel.text(customer.email)
+      customerIdLabel.text(customer.customerID)
+      totalMoneyLabel.text(customer.totalMoney)
     }
 
 
 
-    function getTypeInfo(id) {
-      $.getJSON(`/admin/customerType/info/${id}`, function (data) {
+    function getCustomerInfo(id) {
+      $.getJSON(`/admin/customer/info/${id}`, function (data) {
         addDataToViewModal(data);
         addDataToEditModal(data);
       });
@@ -257,12 +253,12 @@
     Code để XÓA thông tin tài khoản khách hàng - đuôi
     */
 
-    function deleteType() {
+    function deleteCustomer() {
       $.ajax({
         method: 'DELETE',
-        url: `/admin/customerType/info/${selectedId}`,
+        url: `/admin/customer/info/${selectedId}`,
         success: function (idDeleted) {
-          alert("Xóa thông tin loại khách hàng thành công");
+          alert("Xóa thông tin khách hàng thành công");
           location.reload();
         },
         error: function (err) {
@@ -280,10 +276,8 @@
     function emptyInput() {
       inputFullname.val('');
       inputPhone.val('');
-      inputIdCode.val('');
       inputAddress.val('');
       inputEmail.val('');
-      inputBirth.val('');
 
     }
 
@@ -294,7 +288,7 @@
 
 
     function reLoadPage(){
-      location.replace('/admin/customerType');
+      location.replace('/admin/customer');
     }
 
 

@@ -1,26 +1,24 @@
 <table id="datatable" class="table table-bordered">
   <thead>
     <tr>
-      <th>Tên loại</th>
-      <th>Mã loại</th>
-      <th>Số tiền</th>
-      <th>Giảm giá</th>
+      <th>Mã khách hàng</th>
+      <th>Tên khách hàng</th>
+      <th>Chi tiêu</th>
       <th>Hành động</th>
     </tr>
   </thead>
   <tbody>
-    <% if(typeof types != 'undefined') { %>
-    <% types.forEach(item => { %>
+    <% if(typeof listCustomer != 'undefined') { %>
+    <% listCustomer.forEach(item => { %>
     <tr>
-      <td><%- item.typeName %></td>
-      <td><%- item.typeID %></td>
-      <td><%- item.minPaid %></td>
-      <td><%- item.discount %></td>
+      <td><%- item.customerID %></td>
+      <td><%- item.fullname %></td>
+      <td><%- item.totalMoney %></td>
       <td class="text-center">
         <button class="btn btn-outline-success" data-toggle="modal" data-target="#view-modal"
-          onclick="getTypeInfo('<%- item._id %>')">Xem</button>
+          onclick="getCustomerInfo('<%- item._id %>')">Xem</button>
         <button class="btn btn-outline-warning" data-toggle="modal" data-target="#edit-modal"
-          onclick="getTypeInfo('<%- item._id %>')">Sửa</button>
+          onclick="getCustomerInfo('<%- item._id %>')">Sửa</button>
         <button class="btn btn-outline-danger" data-toggle="modal" data-target="#delete-modal"
           onclick="getID('<%- item._id %>')">Xóa</button>
 

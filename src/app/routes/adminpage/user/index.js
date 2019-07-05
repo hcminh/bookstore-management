@@ -1,12 +1,18 @@
-var mongoose = require('mongoose');
+
 var router = require('express').Router();
+var controller = require('app/controllers').userController;
+
+router.route('/')
+.get(controller.getAll)
+
+router.route('/create')
+.post(controller.postCreate)
+
+router.route('/info/:id')
+.get(controller.getInfo)
+.post(controller.postEdit)
+.delete(controller.remove)
 
 
-router.get('/', (req, res, next) => {
-    return res.render('adminpage/users');
-})
-require('./modules/create')(router);
-require('./modules/edit')(router);
-require('./modules/delete')(router);
 
 module.exports = router
