@@ -7,7 +7,6 @@ const ManageBook = mongoose.model('manageBook');
 const Rule = mongoose.model('rule')
 
 const { successNotify, errorNotify, success } = require('services/returnToUser')
-const { isExist } = require('services/modifyData')
 
 async function getAll(req, res, next) {
 	try {

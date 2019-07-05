@@ -9,7 +9,6 @@ module.exports = {
     inventoryReport: require('./report/inventoryReport'),
 
     importForm: require('./importForm'),
-    order: require('./order'),
     receipt: require('./receipt'),
     bill: require('./bill'),
 
