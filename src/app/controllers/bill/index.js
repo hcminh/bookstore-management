@@ -79,6 +79,7 @@ async function postCreate(req, res, next) {
 
 			let manageBook = await ManageBook.findOne({book: infos.infos[item].book});
 			manageBook.amount -= infos.infos[item].amount;
+			manageBook.solds += infos.infos[item].amount;
 			await manageBook.save();
 		}
 		if (infos.customerID != '') {

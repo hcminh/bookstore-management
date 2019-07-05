@@ -3,11 +3,6 @@ module.exports = {
     customer: require('./entity/customer'),
     book: require('./entity/book'),
 
-    debt: require('./report/debt'),
-    debtReport: require('./report/debtReport'),
-    inventory: require('./report/inventory'),
-    inventoryReport: require('./report/inventoryReport'),
-
     importForm: require('./importForm'),
     receipt: require('./receipt'),
     bill: require('./bill'),

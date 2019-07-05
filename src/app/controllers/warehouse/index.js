@@ -4,10 +4,10 @@ const Book = mongoose.model('book')
 const ManageBook = mongoose.model('manageBook')
 const { successNotify, errorNotify } = require('services/returnToUser')
 
-async function getAllBook(req, res, next) {
+async function getPage(req, res, next) {
 	try {
-		listBooks = await Book.find({});
-		return res.render('adminpage/book', {listBooks, user: req.user});
+		listBooks = await ManageBook.find({}).populate('book');
+		return res.render('adminpage/warehouse', {listBooks, user: req.user});
 	} catch (error) {
 		next(error);
 	}
@@ -33,8 +33,7 @@ async function postCreateBook(req, res, next) {
 			return errorNotify(res, {message: `Tựa sách ${book.name} hoặc mã sách ${book.bookID} đã tồn tại trong hệ thống!`})
 		}
 
-		let manageBook = new ManageBook({bookID: book.bookID, book: book._id, initAmount: req.body.initAmount, amount: req.body.initAmount});
-
+		let manageBook = new ManageBook({bookID: book.bookID, book: book._id});
 		await manageBook.save();
 		await book.save({ validateBeforeSave: true });
 		return successNotify(res, {message: `Thêm thành công tựa sách ${book.name}`})
@@ -76,7 +75,7 @@ async function deleteBook(req, res, next) {
 }
 
 module.exports = {
-	getAllBook,
+	getPage,
 	getBookInfo,
 	postCreateBook,
 	postEditBook,
