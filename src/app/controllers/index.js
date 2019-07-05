@@ -5,4 +5,5 @@ module.exports = {
   billController: require('./bill'),
   customerController: require('./customer'),
   userController: require('./user'),
+  ruleController: require('./rule'),
 }

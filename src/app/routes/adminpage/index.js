@@ -9,4 +9,5 @@ router.use('/user', require('./user'));
 router.use('/customer', require('./customer'));
 router.use('/book', require('./book'));
 router.use('/importForm', require('./importForm'));
+router.use('/rule', require('./rule'));
 module.exports = router;

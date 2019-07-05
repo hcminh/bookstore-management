@@ -15,4 +15,5 @@ module.exports = {
 
     //to manage
     manageBook: require('./manageBook'),
+    rule: require('./rule'),
   }

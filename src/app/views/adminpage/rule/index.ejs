@@ -10,43 +10,6 @@
 
 <body class="fixed-left">
   <div id="notify-wrapper" style="position: absolute">
-    <% if(typeof error != 'undefined') { %>
-    <div class="modal d-block" tabindex="-1" role="dialog">
-      
-          <div class="modal-dialog notify-modal" role="document">
-            <div class="modal-content notify-modal-error-content">
-              <div class="modal-header notify-modal-header">
-                <h2 class="modal-title">Thông Báo</h2>
-              </div>
-              <div class="modal-body py-0">
-                <p><%- error %></p>
-              </div>
-              <div class="modal-footer notify-modal-footer">
-                <button type="button" class="btn btn-outline-light" onclick="reLoadPage()">Đóng</button>
-              </div>
-            </div>
-          </div>
-    </div>
-        <% } %>
-        <% if(typeof success != 'undefined') { %>
-          <div class="modal d-block" tabindex="-1" role="dialog">
-            <div class="modal-dialog notify-modal" role="document">
-              <div class="modal-content notify-modal-success-content">
-                <div class="modal-header notify-modal-header">
-                  <h2 class="modal-title">Thông Báo</h2>
-                </div>
-                <div class="modal-body py-0">
-                  <p><%- success %></p>
-                </div>
-                <div class="modal-footer notify-modal-footer">
-                  <button type="button" class="btn btn-outline-light" onclick="reLoadPage()">Đóng</button>
-                </div>
-              </div>
-            </div>
-        <% } %>
-
-    </div>
-
   </div>
   <div id="wrapper">
 
@@ -72,14 +35,34 @@
           <div class="row">
             <div class="col-12">
               <div class="card-box table-responsive">
-                <h4 class="m-t-0 header-title">Quản lý khách hàng</h4>
+                <h4 class="m-t-0 header-title">Điều chỉnh luật nhập xuất kho sách</h4>
 
                 <!-- Add product button -->
-                <button class="btn btn-primary waves-effect waves-light" data-toggle="modal"
-                  data-target="#modal-create">Tạo tài khoản Khách hàng</button>
-                <p class="text-muted font-14 m-b-30"></p>
-
-                <% include ./table %>
+                <p class="text-muted font-20 m-b-30"></p>
+                <div class="form-group row">
+                    <label class="col-3 font-14">Số lượng sách nhập tối thiểu:</label>
+                    <input type="number" name="minOfImport" class="form-control form-control-user col-2"
+                    value="<%- rule.minOfImport %>"
+                    data-focus="Số lượng sách nhập tối thiểu">
+                </div>
+                <div class="form-group row">
+                    <label class="col-3 font-14">Số lượng sách tồn tối thiểu trước khi nhập:</label>
+                    <input type="number" name="minOfinventory" class="form-control form-control-user col-2"
+                    value="<%- rule.minOfinventory %>"
+                    data-focus="Số lượng sách tồn tối thiểu trước khi nhập">
+                </div>
+                <div class="form-group row">
+                    <label class="col-3 font-14">Số lượng sách tồn tối thiểu sau khi bán:</label>
+                    <input type="number" name="minQuantity" class="form-control form-control-user col-2"
+                    value="<%- rule.minQuantity %>"
+                    data-focus="Số lượng sách tồn tối thiểu sau khi bán">
+                </div>
+                <div class="form-group row">
+                  <div class="col-12 text-right">
+                      <button onclick="updateRule()"
+                          class="btn btn-primary waves-effect waves-light">Cập nhật quy định</button>
+                  </div>
+              </div>
               </div>
             </div>
           </div>
@@ -106,14 +89,6 @@
   </div>
   <!-- END wrapper -->
 
-  <!-- Create Modal-->
-  <% include ./modal-create %>
-  <!-- Edit Modal-->
-  <% include ./modal-edit %>
-  <!-- View Modal-->
-  <% include ./modal-view %>
-  <!-- Delete Modal-->
-  <% include ./modal-delete %>
   <!-- Logout Modal-->
   <% include ../partials/modal-logout %>
   <!-- Scripts-->
@@ -130,100 +105,83 @@
     /*
     Code để tạo mới tài khoản khách hàng - đầu
     */
-    let inputFullname = $('input[name="fullname"]');
-    let inputPhone = $('input[name="phone"]');
-    let inputAddress = $('input[name="address"]');
-    let inputEmail = $('input[name="email"]');
+    let inputMinOfImport = $('input[name="minOfImport"]');
+    let inputMinOfinventory = $('input[name="minOfinventory"]');
+    let inputMinQuantity = $('input[name="minQuantity"]');
 
     function CheckValideDataToCreate() {
-      let array = [inputFullname, inputPhone, inputAddress, inputEmail]
+      let array = [inputMinOfImport, inputMinOfinventory, inputMinQuantity]
       return (CheckValidate(array));
     }
 
-    $('#form-create').on('submit', (function (e) {
+
+    function updateRule() {
       let validate = CheckValideDataToCreate();
       if (validate.err) {
         e.preventDefault();
         alert("Yêu cầu nhập " + validate.message);
         return false;
       }
-    }));
-
-    /*
-    Code để tạo mới tài khoản khách hàng - đuôi
-    */
-
-
-
-
-    /*
-    Code để sửa thông tin tài khoản khách hàng - đầu
-    */
-
-    let fullnameEditInput = $('#editInput-fullname');
-    let phoneEditInput = $('#editInput-phone');
-    let addressEditInput = $('#editInput-address');
-    let emailEditInput = $('#editInput-email');
-    let customerIdEditInput = $('#editInput-customerId');
-    let formEdit = $('#form-edit');
-
-    function addDataToEditModal(customer) {
-      formEdit.attr('action', `/admin/customer/info/${customer._id}`);
-      fullnameEditInput.val(customer.fullname)
-      phoneEditInput.val(customer.phone)
-      addressEditInput.val(customer.address)
-      emailEditInput.val(customer.email)
-      customerIdEditInput.val(customer.customerID)
+      $.ajax({
+            method: 'POST',
+            url: `/admin/rule`,
+            dataType: "json",
+            data: {
+                minOfImport: inputMinOfImport.val(),
+                minOfinventory: inputMinOfinventory.val(),
+                minQuantity: inputMinQuantity.val(),
+            },
+            success: function (success) {
+                $('#modal-create').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#modal-create').modal('toggle')
+                $('#notify-wrapper').append(componentError(err))
+            }
+        })
     }
 
-    $('#form-edit').on('submit', (function (e) {
-      let validate = CheckValideData();
-      if (validate.err) {
-        e.preventDefault();
-        alert("Yêu cầu nhập " + validate.message);
-        return false;
-      }
-    }));
-
-    /*
-    Code để sửa thông tin tài khoản khách hàng - đuôi
+        /*
+        Component
     */
-
-
-
-    /*
-    Code để xem thông tin tài khoản khách hàng - đầu
-    */
-    let fullnameLabel = $('#label-fullname');
-    let phoneLabel = $('#label-phone');
-    let addressLabel = $('#label-address');
-    let emailLabel = $('#label-email');
-    let customerIdLabel = $('#label-customerId');
-    let totalMoneyLabel = $('#label-totalMoney');
-
-    function addDataToViewModal(customer) {
-      fullnameLabel.text(customer.fullname)
-      phoneLabel.text(customer.phone)
-      addressLabel.text(customer.address)
-      emailLabel.text(customer.email)
-      customerIdLabel.text(customer.customerID)
-      totalMoneyLabel.text(customer.totalMoney)
+    function componentError(error) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-error-content">
+                        <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                        </div>
+                        <div class="modal-body py-0">
+                            <p>${ error.responseJSON.message}</p>
+                        </div>
+                        <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="removeComponent()">Đóng</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>`
     }
-
-
-
-    function getCustomerInfo(id) {
-      $.getJSON(`/admin/customer/info/${id}`, function (data) {
-        addDataToViewModal(data);
-        addDataToEditModal(data);
-      });
+    function componentSuccess(success) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-success-content">
+                            <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                            </div>
+                            <div class="modal-body py-0">
+                                <p>${ success.message}</p>
+                            </div>
+                            <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="reLoadPage()">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
     }
-
-    /*
-    Code để xem thông tin tài khoản khách hàng - đuôi
-    */
-
-
+    function removeComponent() {
+        $('#notify-wrapper').children().remove();
+    }
 
     /*
     Code kiểm tra thông tin tài khoản khách hàng - đầu
@@ -243,56 +201,9 @@
     }
 
 
-
-    /*
-    Code để kiểm tra thông tin tài khoản khách hàng - đuôi
-    */
-
-
-    /*
-    Code để XÓA thông tin tài khoản khách hàng - đuôi
-    */
-
-    function deleteCustomer() {
-      $.ajax({
-        method: 'DELETE',
-        url: `/admin/customer/info/${selectedId}`,
-        success: function (idDeleted) {
-          alert("Xóa thông tin khách hàng thành công");
-          location.reload();
-        },
-        error: function (err) {
-          alert(err.responseJSON)
-        }
-      })
-    }
-
-    /*
-    Code để XÓA thông tin tài khoản khách hàng - đuôi
-    */
-
-
-
-    function emptyInput() {
-      inputFullname.val('');
-      inputPhone.val('');
-      inputAddress.val('');
-      inputEmail.val('');
-
-    }
-
-    function cancelInput(event) {
-      event.preventDefault();
-      emptyInput();
-    }
-
-
     function reLoadPage(){
-      location.replace('/admin/customer');
+      location.reload()
     }
-
-
-
 
   </script>
 </body>

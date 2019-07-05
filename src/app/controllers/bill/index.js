@@ -4,8 +4,7 @@ const Bill = mongoose.model('bill');
 const Book = mongoose.model('book');
 const Customer = mongoose.model('customer');
 const ManageBook = mongoose.model('manageBook');
-
-const MIN_OF_AVAILABLE = 20
+const Rule = mongoose.model('rule')
 
 const { successNotify, errorNotify, success } = require('services/returnToUser')
 const { isExist } = require('services/modifyData')
@@ -53,8 +52,9 @@ async function postInfo(req, res, next) {
 			return errorNotify(res, { message: "Mã sách không tồn tại! <br> Vui lòng nhập kiểm tra lại thông tin" })
 		}
 		let manageBook = await ManageBook.findOne({ bookID: info.bookID })
+		let rule = await Rule.findOne({})
 
-		if (manageBook.amount - info.amount < MIN_OF_AVAILABLE) {
+		if (manageBook.amount - info.amount < rule.minQuantity) {
 			return errorNotify(res, { message: `Không thể bán! <br> Số lượng sách còn trong kho ít hơn mức quy định` })
 		}
 		//is ok
