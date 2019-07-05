@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const Form = mongoose.model('importForm')
 const Book = mongoose.model('book')
 const ManageBook = mongoose.model('manageBook')
+const Rule = mongoose.model('rule')
 
-const MIN_OF_BOOKS = 300
 
 const { successNotify, errorNotify, success } = require('services/returnToUser')
 
@@ -50,13 +50,14 @@ async function postInfo(req, res, next) {
 			return errorNotify(res, { message: "Mã sách không tồn tại! vui lòng nhập thông tin sách trước khi nhập kho" })
 		}
 		let manageBook = await ManageBook.findOne({ bookID: info.bookID })
+		let rule = await Rule.findOne({});
 
-		if (manageBook.amount >= MIN_OF_BOOKS) {
-			return errorNotify(res, { message: `Chỉ cho nhập tựa sách có lượng tồn bé hơn ${MIN_OF_BOOKS}` })
+		if (manageBook.amount >= rule.minOfinventory) {
+			return errorNotify(res, { message: `Chỉ cho nhập tựa sách có lượng tồn bé hơn ${rule.minOfinventory}` })
 		}
 		
-		if (req.body.amount < manageBook.minQuantity) {
-			return errorNotify(res, { message: `Số lượng nhập phải lớn hơn ${manageBook.minQuantity}` })
+		if (req.body.amount < rule.minOfImport) {
+			return errorNotify(res, { message: `Số lượng nhập phải lớn hơn ${rule.minOfImport}` })
 		}
 		//is ok
 		info.book = book._id;

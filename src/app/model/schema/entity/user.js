@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var users = new mongoose.Schema({
+var user = new mongoose.Schema({
   username: {
     required: true,
     type: String,
@@ -15,7 +15,11 @@ var users = new mongoose.Schema({
   },
   roles: [{
     type: String
-  }]
+  }],
+  userID: {
+    type: String,
+    default: "USER-" + new Date().getTime()
+  }
 })
 
-module.exports = users;
+module.exports = user;

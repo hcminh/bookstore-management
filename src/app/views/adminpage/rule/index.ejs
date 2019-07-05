@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<!-- Mirrored from coderthemes.com/adminto/vertical_dark/tables-datatable.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 21 Mar 2019 13:19:06 GMT -->
+
+<head>
+  <% include ../partials/head %>
+</head>
+
+
+<body class="fixed-left">
+  <div id="notify-wrapper" style="position: absolute">
+  </div>
+  <div id="wrapper">
+
+    <!-- Top Bar Start -->
+    <% include ../partials/navbar %>
+    <!-- Top Bar End -->
+
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <% include ../partials/side-bar %>
+    <!-- Left Sidebar End -->
+
+
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+      <!-- Start content -->
+      <div class="content">
+        <div class="container-fluid">
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card-box table-responsive">
+                <h4 class="m-t-0 header-title">Điều chỉnh luật nhập xuất kho sách</h4>
+
+                <!-- Add product button -->
+                <p class="text-muted font-20 m-b-30"></p>
+                <div class="form-group row">
+                    <label class="col-3 font-14">Số lượng sách nhập tối thiểu:</label>
+                    <input type="number" name="minOfImport" class="form-control form-control-user col-2"
+                    value="<%- rule.minOfImport %>"
+                    data-focus="Số lượng sách nhập tối thiểu">
+                </div>
+                <div class="form-group row">
+                    <label class="col-3 font-14">Số lượng sách tồn tối thiểu trước khi nhập:</label>
+                    <input type="number" name="minOfinventory" class="form-control form-control-user col-2"
+                    value="<%- rule.minOfinventory %>"
+                    data-focus="Số lượng sách tồn tối thiểu trước khi nhập">
+                </div>
+                <div class="form-group row">
+                    <label class="col-3 font-14">Số lượng sách tồn tối thiểu sau khi bán:</label>
+                    <input type="number" name="minQuantity" class="form-control form-control-user col-2"
+                    value="<%- rule.minQuantity %>"
+                    data-focus="Số lượng sách tồn tối thiểu sau khi bán">
+                </div>
+                <div class="form-group row">
+                  <div class="col-12 text-right">
+                      <button onclick="updateRule()"
+                          class="btn btn-primary waves-effect waves-light">Cập nhật quy định</button>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+          <!-- end row -->
+
+        </div> <!-- container -->
+
+      </div> <!-- content -->
+
+      <% include ../partials/footer %>
+
+    </div>
+
+
+    <!-- ============================================================== -->
+    <!-- End Right content here -->
+    <!-- ============================================================== -->
+
+
+    <!-- Right Sidebar -->
+    <% include ../partials/right-bar %>
+    <!-- /Right-bar -->
+
+  </div>
+  <!-- END wrapper -->
+
+  <!-- Logout Modal-->
+  <% include ../partials/modal-logout %>
+  <!-- Scripts-->
+  <% include ../partials/scripts %>
+  <script>
+    var selectedId = '';
+  </script>
+  <script>
+    function getID(id) {
+      selectedId = id;
+    }
+
+
+    /*
+    Code để tạo mới tài khoản khách hàng - đầu
+    */
+    let inputMinOfImport = $('input[name="minOfImport"]');
+    let inputMinOfinventory = $('input[name="minOfinventory"]');
+    let inputMinQuantity = $('input[name="minQuantity"]');
+
+    function CheckValideDataToCreate() {
+      let array = [inputMinOfImport, inputMinOfinventory, inputMinQuantity]
+      return (CheckValidate(array));
+    }
+
+
+    function updateRule() {
+      let validate = CheckValideDataToCreate();
+      if (validate.err) {
+        e.preventDefault();
+        alert("Yêu cầu nhập " + validate.message);
+        return false;
+      }
+      $.ajax({
+            method: 'POST',
+            url: `/admin/rule`,
+            dataType: "json",
+            data: {
+                minOfImport: inputMinOfImport.val(),
+                minOfinventory: inputMinOfinventory.val(),
+                minQuantity: inputMinQuantity.val(),
+            },
+            success: function (success) {
+                $('#modal-create').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#modal-create').modal('toggle')
+                $('#notify-wrapper').append(componentError(err))
+            }
+        })
+    }
+
+        /*
+        Component
+    */
+    function componentError(error) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-error-content">
+                        <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                        </div>
+                        <div class="modal-body py-0">
+                            <p>${ error.responseJSON.message}</p>
+                        </div>
+                        <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="removeComponent()">Đóng</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>`
+    }
+    function componentSuccess(success) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-success-content">
+                            <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                            </div>
+                            <div class="modal-body py-0">
+                                <p>${ success.message}</p>
+                            </div>
+                            <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="reLoadPage()">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+    }
+    function removeComponent() {
+        $('#notify-wrapper').children().remove();
+    }
+
+    /*
+    Code kiểm tra thông tin tài khoản khách hàng - đầu
+    */
+    function CheckValidate(listInput) {
+      listInput.forEach(element => {
+        element.css("border-color", "#E3E3E3");
+      });
+      for (let element of listInput) {
+        if (element.val() == "") {
+          element.focus();
+          element.css("border-color", "red")
+          return { err: true, message: element.attr('data-focus') };
+        }
+      }
+      return { err: false };
+    }
+
+
+    function reLoadPage(){
+      location.reload()
+    }
+
+  </script>
+</body>
+
+<!-- Mirrored from coderthemes.com/adminto/vertical_dark/tables-datatable.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 21 Mar 2019 13:19:10 GMT -->
+
+</html>

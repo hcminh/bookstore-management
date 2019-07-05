@@ -2,14 +2,13 @@
 const router = require('express').Router();
 const controller = require('app/controllers').importFormController;
 
-const { IS_ADMIN, IS_EMPLOYEE } = require("config/constants");
+const { WAREHOUSE_MANAGER } = require("config/constants");
 const { checkPermission } = require("services/checkPermission");
 
 router.route('/')
 .get(controller.getAll)
 
 router.route('/create')
-.get(controller.getCreatePage)
 .post(controller.postCreate)
 
 router.route('/create/infos')
@@ -17,8 +16,8 @@ router.route('/create/infos')
 
 router.route('/info/:id')
 .get(controller.getInfo)
-.post(controller.postVerify)
-.delete(controller.remove);
+.post(checkPermission(WAREHOUSE_MANAGER), controller.postVerify)
+.delete(checkPermission(WAREHOUSE_MANAGER), controller.remove);
 
 
 
