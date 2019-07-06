@@ -9,5 +9,5 @@ module.exports = router => {
   router.use('/logout', require('./adminpage/login/logout'));
   router.use('/admin',checkPermission(IS_ALL), require('./adminpage'));
   // router.use('/admin', require('./adminpage'));
-  router.use('/', require('./homepage'));
+  // router.use('/', require('./homepage'));
 }

@@ -27,7 +27,8 @@ cd Books-Management
 ```nodejs
 npm install # install node package to run app
 npm start # run app
-# your app will be run at localhost:3000
+# then go to the localhost:3000/setup to setup your superuser
+# enjoy your app at localhost:3000/admin
 ```
 
 ## Contributing
