@@ -17,8 +17,8 @@ This app is develop for every bookstore that need management all items in their 
 
 Firstly install these software: 
 
-Nodejs: https://nodejs.org/en/download/
-MongoDB Server: https://www.mongodb.com/download-center/community
+> Nodejs: https://nodejs.org/en/download/
+> MongoDB Server: https://www.mongodb.com/download-center/community
 
 To run this app clone project & cd to project.
 
