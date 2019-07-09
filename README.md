@@ -1,4 +1,4 @@
-# Books-Management
+# Bookstore-Management
 
 This app is develop for every bookstore that need management all items in their wavehouse. Some highlights feature:
 
