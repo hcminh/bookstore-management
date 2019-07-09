@@ -1,3 +1,34 @@
-<h1><%= error.message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+
+<!DOCTYPE html>
+<html>
+    
+
+<head>
+    <% include ../adminpage/partials/head %>
+</head>
+
+    <body>
+
+        <div class="account-pages"></div>
+        <div class="clearfix"></div>
+        <div class="wrapper-page">
+            <div class="ex-page-content text-center">
+                <div class="text-error"><%= error.status %></div>
+                <h3 class="text-uppercase font-600"><%= error.message %></h3>
+                <p class="text-muted">
+                    Why not try refreshing your page? or you can contact <a href="#" class="text-primary">support</a>
+                </p>
+                <br>
+                <a class="btn btn-success waves-effect waves-light" href="/admin"> Return Home</a>
+
+            </div>
+        </div>
+        <!-- end wrapper page -->
+
+
+    <% include ../adminpage/partials/scripts %>
+	
+	</body>
+
+<!-- Mirrored from coderthemes.com/adminto/vertical_dark/page-500.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 21 Mar 2019 13:19:20 GMT -->
+</html>

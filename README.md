@@ -15,11 +15,16 @@ This app is develop for every bookstore that need management all items in their 
 > Mongodb  
 ## Installation
 
+Firstly install these software: 
+
+Nodejs: https://nodejs.org/en/download/
+MongoDB Server: https://www.mongodb.com/download-center/community
+
 To run this app clone project & cd to project.
 
 ```bash
-git clone https://github.com/hcminh/Books-Management.git
-cd Books-Management
+git clone https://github.com/hcminh/bookstore-management.git
+cd bookstore-management
 ```
 
 ## Usage
@@ -29,6 +34,9 @@ npm install # install node package to run app
 npm start # run app
 # then go to the localhost:3000/setup to setup your superuser
 # enjoy your app at localhost:3000/admin
+# note: you may need to be login before use with acount:
+username: admin
+password: 1
 ```
 
 ## Contributing

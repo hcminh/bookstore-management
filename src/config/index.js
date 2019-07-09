@@ -1,6 +1,5 @@
 module.exports = {
     PORT: "3000",
-    SECRET: "Bookstore_Management_secret",
     DATA_COLLECTION: "Bookstore_Management",
     SESSION: {
         name: 'session_Bookstore_Management',
