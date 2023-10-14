@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const Book = mongoose.model('book')
 const ManageBook = mongoose.model('manageBook')
 const { successNotify, errorNotify } = require('services/returnToUser')
-const { isExist } = require('services/modifyData')
 
 async function getAllBook(req, res, next) {
 	try {

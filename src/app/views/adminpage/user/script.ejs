@@ -1,0 +1,219 @@
+<script>
+    var selectedId = '';
+</script>
+<script>
+    function getID(id) {
+        selectedId = id;
+    }
+</script>
+<script>
+
+    /*
+    Khai báo biến
+    */
+    let usernameInput = $('input[name="username"]');
+    let passwordInput = $('input[name="password"]');
+    let fullnameInput = $('input[name="fullname"]');
+    let rolesInput = $('select[name="roles"]');
+
+    let usernameEdit = $('#edit-username');
+    let fullnameEdit = $('#edit-fullname');
+    let rolesEdit = $('#edit-roles');
+    let userIDEdit = $('#edit-userID');
+
+    let usernameLabel = $('#label-username');
+    let fullnameLabel = $('#label-fullname');
+    let rolesLabel = $('#label-roles');
+    let userIDLabel = $('#label-userID');
+
+
+    /*
+    Code kiểm tra thông tin
+    */
+    function CheckValidate(listInput) {
+        listInput.forEach(element => {
+            element.css("border-color", "#E3E3E3");
+        });
+        for (let element of listInput) {
+            if (element.val() == "") {
+                element.focus();
+                element.css("border-color", "red")
+                return { err: true, message: element.attr('data-focus') };
+            }
+        }
+        return { err: false };
+    }
+
+    function valideToCreate() {
+        let array = [usernameInput, passwordInput, fullnameInput, rolesInput]
+        return (CheckValidate(array));
+    }
+
+    function valideToEdit() {
+        let array = [fullnameEdit, rolesEdit]
+        return (CheckValidate(array));
+    }
+
+    /*
+        Component
+    */
+    function componentError(error) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-error-content">
+                        <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                        </div>
+                        <div class="modal-body py-0">
+                            <p>${ error.responseJSON.message}</p>
+                        </div>
+                        <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="removeComponent()">Đóng</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>`
+    }
+    function componentSuccess(success) {
+        return `<div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog notify-modal" role="document">
+                        <div class="modal-content notify-modal-success-content">
+                            <div class="modal-header notify-modal-header">
+                            <h2 class="modal-title">Thông Báo</h2>
+                            </div>
+                            <div class="modal-body py-0">
+                                <p>${ success.message}</p>
+                            </div>
+                            <div class="modal-footer notify-modal-footer">
+                            <button type="button" class="btn btn-outline-light" onclick="reLoadPage()">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+    }
+    function removeComponent() {
+        $('#notify-wrapper').children().remove();
+    }
+
+    /*
+        Thêm sách mới
+    */
+    $('#form-create').on('submit', (function (e) {
+        e.preventDefault();
+        let validate = valideToCreate();
+        if (validate.err) {
+            alert("Yêu cầu nhập " + validate.message);
+            return false;
+        }
+        $.ajax({
+            method: 'POST',
+            url: `/admin/user/create`,
+            dataType: "json",
+            data: {
+                username: usernameInput.val(),
+                password: passwordInput.val(),
+                fullname: fullnameInput.val(),
+                roles: rolesInput.val(),
+            },
+            success: function (success) {
+                $('#modal-create').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#modal-create').modal('toggle')
+                $('#notify-wrapper').append(componentError(err))
+            }
+        })
+    }));
+
+    /*
+       Sửa sách
+   */
+    $('#form-edit').on('submit', (function (e) {
+        e.preventDefault();
+        let validate = valideToEdit();
+        if (validate.err) {
+            alert("Yêu cầu nhập " + validate.message);
+            return false;
+        }
+        $.ajax({
+            method: 'POST',
+            url: `/admin/user/info/${selectedId}`,
+            dataType: "json",
+            data: {
+                fullname: fullnameEdit.val(),
+                roles: rolesEdit.val()
+            },
+            success: function (success) {
+                $('#edit-modal').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#edit-modal').modal('toggle')
+                $('#notify-wrapper').append(createComponentError(err))
+            }
+        })
+    }));
+
+    /*
+    Xóa sách
+    */
+    function deleteUser() {
+        $.ajax({
+            method: 'DELETE',
+            url: `/admin/user/info/${selectedId}`,
+            success: function (success) {
+                $('#delete-modal').modal('toggle')
+                $('#notify-wrapper').append(componentSuccess(success))
+            },
+            error: function (err) {
+                $('#delete-modal').modal('toggle')
+                $('#notify-wrapper').append(createComponentError(err))
+            }
+        })
+    }
+
+
+    /*
+    Cập nhật thông tin khác
+    */
+    function reLoadPage() {
+        location.reload();
+    }
+
+    function emptyInput() {
+        usernameInput.val('');
+        passwordInput.val('');
+        fullnameInput.val('');
+        rolesInput.val('');
+    }
+
+    function cancelInput(event) {
+        event.preventDefault();
+        emptyInput();
+    }
+
+    function addDataToViewModal(user) {
+        usernameLabel.text(user.username)
+        fullnameLabel.text(user.fullname)
+        rolesLabel.text(user.roles)
+        userIDLabel.text(user.userID)
+    }
+
+    function addDataToEditModal(user) {
+        usernameEdit.val(user.username)
+        fullnameEdit.val(user.fullname)
+        rolesEdit.val(user.roles)
+        userIDEdit.val(user.userID)
+    }
+
+    function getInfo(id) {
+        getID(id)
+        $.getJSON(`/admin/user/info/${id}`, function (data) {
+            addDataToViewModal(data);
+            addDataToEditModal(data);
+        });
+    }
+
+
+</script>

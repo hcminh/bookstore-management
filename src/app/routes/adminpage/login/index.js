@@ -4,7 +4,7 @@ var passport = require("passport");
 
 //dang nhap
 router.get('/', async function (req, res, next) {
-    res.render('adminpage/users/login');
+    res.render('adminpage/user/login');
 });
 
 router.post("/", passport.authenticate("local", {
